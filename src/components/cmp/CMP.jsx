@@ -6,7 +6,7 @@ import { CmpChild, CmpGroup, CustomCheckbox, CustomCheckboxLabel } from './style
 
 
 const CMP = (props) => {
-	const { op, isSubmit } = props;
+	const { op, isSubmit, getMapingKey} = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -31,6 +31,8 @@ const CMP = (props) => {
 		if (termResponse?.data_obs) {
 			setCmpKey(termResponse?.data_obs);
 			op['mapping_key'] = termResponse?.data_obs;
+			console.log('termResponse?.data_ob', termResponse)
+			getMapingKey(termResponse?.data_obs)
 		}
 
 		if (termResponse?.term?.record?.length) {
@@ -46,7 +48,6 @@ const CMP = (props) => {
 			setCheckProperty(TERM_CHECK_PROPERTY);
 		}
 	};
-	console.log('termName', termName)
 
 	const handleChange = (event, checkboxId) => {
 		const { value, checked } = event.target;
@@ -70,6 +71,7 @@ const CMP = (props) => {
 			Object.keys(checkProperty).forEach((key) => {
 				checkProperty[key].property_value = checked ? true : false;
 			});
+		
 			return;
 		}
 		// setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
@@ -122,8 +124,11 @@ const CMP = (props) => {
 
 		//     } else { clearErrors('isAcceptByParent') }
 		// }
-		op['cmp_properties'] = checkProp2cmpProp(checkProperty);
-		op['mapping_key'] = cmpKey;
+
+		
+	
+		if(!form1Valid) return;
+
 
 
 

@@ -82,16 +82,10 @@ export async function getTerms(op) {
 		Object.keys(params)
 			.map((key) => `${key}=${encodeURIComponent(params[key])}`)
 			.join('&');
-	const terms = await fetch(baseURI + '/cmp-terms' + qs)
-		.then((res) => {
-			if (res.status === 200) return res.json();
-		})
-		.then((res) => {
-			if (res.statusCode == 200) {
-				return res.data;
-			}
-		});
-	return terms;
+		const term = await fetch(baseURI + '/cmp-terms' + qs)
+		const dataResponse = await term.json();
+		console.log('dataResponse'. dataResponse)
+		return dataResponse.data
 };
 
 export async function postConsents(op) {

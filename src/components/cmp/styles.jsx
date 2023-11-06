@@ -19,7 +19,7 @@ export const CmpChild = styled.div`
 export const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
 	position: relative;
 	-webkit-appearance: none;
-	border: 2px solid var(--gray1);
+	border: 2px solid var(--gray1, #000);
 	border-radius: 2px;
 	background: var(--cmp-bg-checkbox-normal, #fff);
 	cursor: pointer;
