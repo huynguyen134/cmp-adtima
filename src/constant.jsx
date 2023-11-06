@@ -1,0 +1,1 @@
+export const baseURI = 'https://cmp-public-api.adtimabox.vn/digital-api';
