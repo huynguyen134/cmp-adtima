@@ -82,11 +82,11 @@ export async function getTerms(op) {
 		Object.keys(params)
 			.map((key) => `${key}=${encodeURIComponent(params[key])}`)
 			.join('&');
-		const term = await fetch(baseURI + '/cmp-terms' + qs)
-		const dataResponse = await term.json();
-		console.log('dataResponse'. dataResponse)
-		return dataResponse.data
-};
+	const term = await fetch(baseURI + '/cmp-terms' + qs)
+	const dataResponse = await term.json();
+	console.log('dataResponse', dataResponse)
+	return dataResponse.data
+}
 
 export async function postConsents(op) {
 	if (op.mode === 'simulate') return true;
@@ -122,14 +122,24 @@ export async function postConsents(op) {
 	return terms;
 };
 
-export function termProp2checkProp(termProp) {
+
+export const CMP_FORM_VALIDATES = {
+	isAcceptAll: {
+		required: 'Vui lòng đồng ý để sử dụng dịch vụ',
+	},
+};
+
+export function termProp2checkProp(termProp, errorMessage) {
 	const TERM_CHECK_PROPERTY = {};
+	console.log('errorMessage', errorMessage)
+
 	termProp?.map((prop) => {
-		TERM_CHECK_PROPERTY['checkbox_' + prop._id] = {
+		TERM_CHECK_PROPERTY[prop._id] = {
 			property_id: prop._id,
 			property_value: false,
 			property_type: prop.type,
 			property_name: prop.name,
+			error_message: errorMessage?.[prop.name].errorMessage || ''
 		};
 	});
 
@@ -148,9 +158,3 @@ export function checkProp2cmpProp(checkProperty) {
 	}
 	return cmpProperties;
 }
-
-export const CMP_FORM_VALIDATES = {
-	isAcceptAll: {
-		required: 'Vui lòng đồng ý để sử dụng dịch vụ',
-	},
-};

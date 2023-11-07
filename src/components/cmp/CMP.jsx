@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { setCookie, checkProp2cmpProp, getBrowser, getOS, getTerms, postConsents, termProp2checkProp } from '../../helpers/utils';
-import { getKeyFormByName } from '../../helpers/common';
 
 import { CmpChild, CmpGroup, CustomCheckbox, CustomCheckboxLabel } from './styles'
+import DOMPurify from "dompurify";
+
 
 
 const CMP = (props) => {
-	const { op, isSubmit, getMapingKey} = props;
+	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, isCmpValidProps, variablesObj } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -20,18 +21,21 @@ const CMP = (props) => {
 		if (dataTerm) {
 			const setValue = new Set(termName);
 			dataTerm?.term_properties.map(ele => {
-				setValue.add(getKeyFormByName(ele.name));
+				setValue.add(ele._id);
 				return setTermName([...setValue]);
 			});
 		}
 	};
+
+	console.log('termName', termName)
 
 	const fetchData = async () => {
 		const termResponse = await getTerms(op);
 		if (termResponse?.data_obs) {
 			setCmpKey(termResponse?.data_obs);
 			op['mapping_key'] = termResponse?.data_obs;
-			console.log('termResponse?.data_ob', termResponse)
+			//send cmp key to props
+			console.log(termResponse?.data_obs)
 			getMapingKey(termResponse?.data_obs)
 		}
 
@@ -42,26 +46,25 @@ const CMP = (props) => {
 			// Create TERM_CHECK_PROPERTY
 			// Update value when onChange Term
 			// Push to op and push to /cmp-consents in postConsents
-			const TERM_CHECK_PROPERTY = termProp2checkProp(tempRecord?.term_properties);
-
+			const TERM_CHECK_PROPERTY = termProp2checkProp(tempRecord?.term_properties, variablesObj);
 			// Set init for checkProperty state
 			setCheckProperty(TERM_CHECK_PROPERTY);
+
 		}
 	};
+	console.log('termName', termName);
+
+	const checkCMPValid = () => {
+		return Object.values(checkProperty).every(value => value.property_value)
+	}
 
 	const handleChange = (event, checkboxId) => {
 		const { value, checked } = event.target;
 		// Update status property_value in TERM_CHECK_PROPERTY
 		if (checkboxId) checkProperty[checkboxId].property_value = checked;
-		// if (checked) {
-		//   setValue(value, true);
-		//   clearErrors(value);
-		// } else {
-		//   setValue(value, false);
-		//   if (formState.submitCount > 0) {
-		//     setError(value, { message: REGISTER_FORM_VALIDATES?.[value].required });
-		//   }
-		// }
+		console.log(checkProperty)
+
+		handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
 
 		if (value === 'isAcceptByParent') {
 			console.log('check all', selectedCMP)
@@ -71,7 +74,10 @@ const CMP = (props) => {
 			Object.keys(checkProperty).forEach((key) => {
 				checkProperty[key].property_value = checked ? true : false;
 			});
-		
+			handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
+
+			//Check if CMP form valid or not
+			isCmpValidProps(checkCMPValid())
 			return;
 		}
 		// setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
@@ -84,9 +90,12 @@ const CMP = (props) => {
 		console.log('value', value)
 		console.log('checked', checked)
 
+		//Check if CMP form valid or not
+		isCmpValidProps(checkCMPValid())
+
 
 	};
-	console.log('selectedCMP', selectedCMP)
+
 
 
 	const handleConvertCMPLabel = (type, consentValue) => {
@@ -119,20 +128,18 @@ const CMP = (props) => {
 
 	useEffect(() => {
 		// if (submitCount > 0) {
+		// 	let isCMPValid = Object.values(checkProperty).every(value => value.property_value);
+		// 	console.log('isCMPValid', isCMPValid)
+		// 	isCmpValidProps(isCMPValid)
+
+		// }
+		// if (submitCount > 0) {
 		//     if (selectedCMP.length < 2) {
 		//         setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
 
 		//     } else { clearErrors('isAcceptByParent') }
 		// }
-
-		
-	
-		if(!form1Valid) return;
-
-
-
-
-	}, [isSubmit])
+	}, [submitCount])
 
 	useEffect(() => {
 		fetchData();
@@ -157,21 +164,34 @@ const CMP = (props) => {
 
 			<CmpGroup>
 				{term?.term_properties?.map((valueTerm, index) => {
-					let nameCheckbox = getKeyFormByName(valueTerm?.name);
+					// let nameCheckbox = getKeyFormByName(valueTerm?.name);
 					return (
-						<CmpChild key={`checkbox_${index}`}>
-							<CustomCheckbox
-								id={`checkbox_${valueTerm._id}`}
-								name={nameCheckbox}
-								type="checkbox"
-								// {...register(nameCheckbox, { ...REGISTER_FORM_VALIDATES[nameCheckbox] })}
-								value={nameCheckbox}
-								onChange={(e) => handleChange(e, 'checkbox_' + valueTerm._id)}
-								checked={selectedCMP.includes(nameCheckbox)}
-							/>
-							<CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`}>{handleConvertCMPLabel(valueTerm?.permission_set, valueTerm?.values[0]?.value_consent
-							)}</CustomCheckboxLabel>
-						</CmpChild>
+						<>
+							<CmpChild key={`checkbox_${index}`}>
+								<CustomCheckbox
+									id={`checkbox_${valueTerm._id}`}
+									name={valueTerm?._id}
+									type="checkbox"
+									// {...register(nameCheckbox, { ...REGISTER_FORM_VALIDATES[nameCheckbox] })}
+									value={valueTerm?._id}
+									onChange={(e) => handleChange(e, valueTerm?._id)}
+									checked={selectedCMP.includes(valueTerm?._id)}
+								/>
+								{/* <CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`} dangerouslySetInnerHTML={{ __html: variablesObj?.[valueTerm?.name].labelText }} /> */}
+								<CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`}>
+									<div dangerouslySetInnerHTML={{
+										__html: DOMPurify.sanitize(variablesObj?.[valueTerm?.name].labelText, {
+											ALLOWED_TAGS: ["a", "b", "div", "b"],
+											ALLOWED_ATTR: ["onclick", "href", "target"]
+										})
+									}}></div>
+									{/* <iframe srcDoc={variablesObj?.[valueTerm?.name].labelText} frameBorder="0" style={{ height: 'auto' }}></iframe> */}
+								</CustomCheckboxLabel>
+							</CmpChild>
+							{!checkProperty?.[valueTerm?._id].property_value && submitCount > 0 && <div>{checkProperty?.[valueTerm?._id].error_message}</div>}
+							{/* {`<div>${checkProperty?.[nameCheckbox].error_message}</div >`} */}
+							{/* {`< div > ${ for (const property in checkProperty) checkProperty.filter(ele => ele.property_id === valueTerm._id && ele.property_id ? '' : '123') }</div>`} */}
+						</>
 					)
 				})}
 			</CmpGroup>
