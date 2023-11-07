@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { setCookie, checkProp2cmpProp, getBrowser, getOS, getTerms, postConsents, termProp2checkProp } from '../../helpers/utils';
 
 import { CmpChild, CmpGroup, CustomCheckbox, CustomCheckboxLabel } from './styles'
-import DOMPurify from "dompurify";
-
 
 
 const CMP = (props) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, isCmpValidProps, variablesObj } = props;
+	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, isCmpValidProps, variablesObj, handleLinkClick } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -36,7 +34,7 @@ const CMP = (props) => {
 			op['mapping_key'] = termResponse?.data_obs;
 			//send cmp key to props
 			console.log(termResponse?.data_obs)
-			getMapingKey(termResponse?.data_obs)
+			getMapingKey && getMapingKey(termResponse?.data_obs)
 		}
 
 		if (termResponse?.term?.record?.length) {
@@ -64,7 +62,7 @@ const CMP = (props) => {
 		if (checkboxId) checkProperty[checkboxId].property_value = checked;
 		console.log(checkProperty)
 
-		handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
+		handleOnChangeCheckbox && handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
 
 		if (value === 'isAcceptByParent') {
 			console.log('check all', selectedCMP)
@@ -74,7 +72,7 @@ const CMP = (props) => {
 			Object.keys(checkProperty).forEach((key) => {
 				checkProperty[key].property_value = checked ? true : false;
 			});
-			handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
+			handleOnChangeCheckbox && handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
 
 			//Check if CMP form valid or not
 			isCmpValidProps(checkCMPValid())
@@ -98,23 +96,11 @@ const CMP = (props) => {
 
 
 
-	const handleConvertCMPLabel = (type, consentValue) => {
-		switch (type) {
-			case '1':
-				return <div>Đủ trên 18 tuổi</div>;
-				break;
-			case '2':
-				return (
-					<div>
-						Chính sách {' '}
-						<span className='policy-link' onClick={(event) => { event.preventDefault(); window.open(`https://adtima.vn/thoa-thuan-su-dung-dich-vu`, '_blank') }}>
-							thỏa thuận sử dụng dịch vụ
-						</span>
-					</div>
-				);
-				break;
-		}
-	};
+	const hadleClickLinkChild = (event, val) => {
+		event.stopPropagation();
+		event.preventDefault();
+		handleLinkClick(val);
+	}
 
 	useEffect(() => {
 		// if (submitCount > 0) {
@@ -179,12 +165,9 @@ const CMP = (props) => {
 								/>
 								{/* <CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`} dangerouslySetInnerHTML={{ __html: variablesObj?.[valueTerm?.name].labelText }} /> */}
 								<CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`}>
-									<div dangerouslySetInnerHTML={{
-										__html: DOMPurify.sanitize(variablesObj?.[valueTerm?.name].labelText, {
-											ALLOWED_TAGS: ["a", "b", "div", "b"],
-											ALLOWED_ATTR: ["onclick", "href", "target"]
-										})
-									}}></div>
+									<span>{variablesObj?.[valueTerm?.name].labelText}</span>
+									{variablesObj?.[valueTerm?.name].link?.length &&  <a onClick={(event)=> hadleClickLinkChild(event, valueTerm)} >{variablesObj?.[valueTerm?.name].labelText}</a>}
+								
 									{/* <iframe srcDoc={variablesObj?.[valueTerm?.name].labelText} frameBorder="0" style={{ height: 'auto' }}></iframe> */}
 								</CustomCheckboxLabel>
 							</CmpChild>
