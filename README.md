@@ -20,7 +20,7 @@ Import vào project
 import { CMP } from 'cmp-adtima';
 ```
 
-``html
+```js
 <CMP 
 	op={{
 		organization_id: '6503fb38c636b9a83f04a5c3',
