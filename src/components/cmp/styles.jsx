@@ -19,9 +19,9 @@ export const CmpChild = styled.div`
 export const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
 	position: relative;
 	-webkit-appearance: none;
-	border: 2px solid var(--gray1, #000);
-	border-radius: 2px;
-	background: var(--cmp-bg-checkbox-normal, #fff);
+	border: var(--cmp-border-checkbox-width, 1px) solid var(--cmp-checkbox-border-normal-color, #000);
+	border-radius: var(--cmp-bg-checkbox-border-radius, 2px);;
+	background: var(--cmp-bg-checkbox-normal-color, #fff);
 	cursor: pointer;
 	line-height: 0;
 	margin: 0 .6em 0 0;
@@ -40,27 +40,29 @@ export const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
 	}
 
 	&:checked {
-		background-color: var(--cmp-bg-checkbox-checked, #102dc3);
+		background-color: var(--cmp-bg-checkbox-checked-color, #102dc3);
 		opacity: 1;
-		border-color: var(--cmp-bg-checkbox-checked, #102dc3);
+		border-color: var(--cmp-checkbox-border-checked-color, #102dc3);
+		&::before {
+			content: '';
+			position: absolute;
+			right: 50%;
+			top: 50%;
+			width: 4px;
+			height: 10px;
+			border: solid var(--cmp-icon-checkbox-checked-color, #fff);
+			border-width: 0 2px 2px 0;
+			margin: -1px -1px 0 -1px;
+			transform: rotate(45deg) translate(-50%, -50%);
+			z-index: 2;
+		}
 	}
 
-	&::before {
-		content: '';
-		position: absolute;
-		right: 50%;
-		top: 50%;
-		width: 4px;
-		height: 10px;
-		border: solid var(--cmp-icon-checkbox-checked, #fff);
-		border-width: 0 2px 2px 0;
-		margin: -1px -1px 0 -1px;
-		transform: rotate(45deg) translate(-50%, -50%);
-		z-index: 2;
-	}
+
 `
 
 export const CustomCheckboxLabel = styled.label`
+	text-align: left;
 	&:hover {
 		cursor: pointer;
 	}
@@ -72,5 +74,11 @@ export const CustomCheckboxLabel = styled.label`
 `
 
 export const CmpGroup = styled.div`
-	padding-left: ${props => props.padding + 'rem' || 0};
+	padding-left: ${props => props.padding + 'rem'};
 `;
+
+
+export const ErrorMessage = styled.div`
+	text-align: left;
+	color: var(--cmp-error-message-color, #ff0000);
+`

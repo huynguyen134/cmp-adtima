@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { setCookie, checkProp2cmpProp, getBrowser, getOS, getTerms, postConsents, termProp2checkProp } from '../../helpers/utils';
 
-import { CmpChild, CmpGroup, CustomCheckbox, CustomCheckboxLabel } from './styles'
+import { CmpChild, CmpGroup, CustomCheckbox, CustomCheckboxLabel, ErrorMessage } from './styles'
+import parse from 'html-react-parser';
+import DOMPurify from 'dompurify';
 
 
 const CMP = (props) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, isCmpValidProps, variablesObj, handleLinkClick } = props;
+	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, cmpValid, variablesObj, handleLinkClick, hideCheckAll = false, paddingChild
+	} = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -75,7 +78,7 @@ const CMP = (props) => {
 			handleOnChangeCheckbox && handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
 
 			//Check if CMP form valid or not
-			isCmpValidProps(checkCMPValid())
+			cmpValid(checkCMPValid())
 			return;
 		}
 		// setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
@@ -89,7 +92,7 @@ const CMP = (props) => {
 		console.log('checked', checked)
 
 		//Check if CMP form valid or not
-		isCmpValidProps(checkCMPValid())
+		cmpValid(checkCMPValid())
 
 
 	};
@@ -97,9 +100,14 @@ const CMP = (props) => {
 
 
 	const hadleClickLinkChild = (event, val) => {
-		event.stopPropagation();
-		event.preventDefault();
-		handleLinkClick(val);
+		if (event.target.tagName === 'A') {
+			event.stopPropagation();
+			event.preventDefault();
+			console.log(event.target)
+			console.log('tagName', event.target.tagName)
+			handleLinkClick(val);
+		};
+
 	}
 
 	useEffect(() => {
@@ -116,7 +124,7 @@ const CMP = (props) => {
 		// if (submitCount > 0) {
 		// 	let isCMPValid = Object.values(checkProperty).every(value => value.property_value);
 		// 	console.log('isCMPValid', isCMPValid)
-		// 	isCmpValidProps(isCMPValid)
+		// 	cmpValid(isCMPValid)
 
 		// }
 		// if (submitCount > 0) {
@@ -134,26 +142,27 @@ const CMP = (props) => {
 
 
 	return (
-		<div>
-			<CmpChild>
+		<div id="adtima-cmp-wrapper">
+			{!hideCheckAll && <CmpChild id="adtima-cmp-select-all">
 				<CustomCheckbox
 					// {...register('isAcceptByParent', { ...REGISTER_FORM_VALIDATES.isAcceptByParent })}
 					type="checkbox"
-					id="checkbox-all"
 					name="isAcceptByParent"
 					value='isAcceptByParent'
 					onChange={handleChange}
 					checked={isAllSelected}
+					id="cmp-checkbox-all"
 				/>
-				<CustomCheckboxLabel htmlFor="checkbox-all">{term?.name}</CustomCheckboxLabel>
-			</CmpChild>
+				<CustomCheckboxLabel htmlFor="cmp-checkbox-all">{term?.name}</CustomCheckboxLabel>
+			</CmpChild>}
 
-			<CmpGroup>
+
+			<CmpGroup id="cmp-term-wrapper" padding={paddingChild ? paddingChild : 1} >
 				{term?.term_properties?.map((valueTerm, index) => {
 					// let nameCheckbox = getKeyFormByName(valueTerm?.name);
 					return (
 						<>
-							<CmpChild key={`checkbox_${index}`}>
+							<CmpChild key={`checkbox_${index}`} id={`cmp-child-${index}`}>
 								<CustomCheckbox
 									id={`checkbox_${valueTerm._id}`}
 									name={valueTerm?._id}
@@ -163,27 +172,18 @@ const CMP = (props) => {
 									onChange={(e) => handleChange(e, valueTerm?._id)}
 									checked={selectedCMP.includes(valueTerm?._id)}
 								/>
-								{/* <CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`} dangerouslySetInnerHTML={{ __html: variablesObj?.[valueTerm?.name].labelText }} /> */}
-								<CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`}>
-									<span>{variablesObj?.[valueTerm?.name].labelText}</span>
-									{variablesObj?.[valueTerm?.name].link?.length &&  <a onClick={(event)=> hadleClickLinkChild(event, valueTerm)} >{variablesObj?.[valueTerm?.name].labelText}</a>}
-								
-									{/* <iframe srcDoc={variablesObj?.[valueTerm?.name].labelText} frameBorder="0" style={{ height: 'auto' }}></iframe> */}
+								<CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`} id={`cmp-checkbox-label-${index}`}>
+									<div onClick={(event) => hadleClickLinkChild(event, valueTerm)}>
+										<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(variablesObj?.[valueTerm?.name].labelText) }}></div>
+									</div>
+									{variablesObj?.[valueTerm?.name].link?.length && <a onClick={(event) => hadleClickLinkChild(event, valueTerm)} >{variablesObj?.[valueTerm?.name].labelText}</a>}
 								</CustomCheckboxLabel>
 							</CmpChild>
-							{!checkProperty?.[valueTerm?._id].property_value && submitCount > 0 && <div>{checkProperty?.[valueTerm?._id].error_message}</div>}
-							{/* {`<div>${checkProperty?.[nameCheckbox].error_message}</div >`} */}
-							{/* {`< div > ${ for (const property in checkProperty) checkProperty.filter(ele => ele.property_id === valueTerm._id && ele.property_id ? '' : '123') }</div>`} */}
+							{!checkProperty?.[valueTerm?._id].property_value && submitCount > 0 && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>}
 						</>
 					)
 				})}
 			</CmpGroup>
-			{/* {errors?.isAcceptByParent && (
-		<div className="error-field">{errors?.isAcceptByParent
-		  ?.message}</div>)} */}
-
-
-
 		</div>
 	)
 }
