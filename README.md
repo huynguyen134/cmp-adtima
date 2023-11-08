@@ -37,12 +37,12 @@ Sử dụng
   handleOnChangeCheckbox={handleOnChangeCheckbox}  // Trả về data khi sự kiện onChange của checkbox bên trong trigger , dùng dữ liệu này để đẩy lên API postConsents thông qua cmp_properties
   variablesObj={{ //Dùng để hiển thị error_message của checkbox khi validate
     "Đủ 18 tuổi": { // Lấy consent_name để hiển thị
-	  errorMessage: 'Vui Lòng đồn(g ý nếu bạn trên 18', // Error message của consents tương ứng
-	  labelText: `<div>Tui đã trên 18 tuổi</div>`, // Label text của constent bạn muốn hiển thị cho 
+      errorMessage: 'Vui Lòng đồng ý nếu bạn trên 18', // Error message của consents tương ứng
+      labelText: `<div>Tui đã trên 18 tuổi</div>`, // Label text của constent bạn muốn hiển thị cho 
 	},
     "Chính sách thỏa thuận sử dụng dịch vụ": {
-	  errorMessage: 'Vui Lòng đồng ý dịch vụ',
-	  labelText: `<div>Đồng ý điều <a href="https://adtima.vn/thoa-thuan-su-dung-dich-vu" target="_blank" class="test">khoản</a> haha<div>`,
+      errorMessage: 'Vui Lòng đồng ý dịch vụ',
+      labelText: `<div>Đồng ý điều <a href="https://adtima.vn/thoa-thuan-su-dung-dich-vu" target="_blank" class="test">khoản</a> haha<div>`,
 	}
   }}
   handleLinkClick={(val) => console.log(val)} // Nếu labelText có link thì sẽ trả về data object của constent đó tỏng trường hợp muốn mở modal hoặc link ra nơi khác . Lưu ý: BẮT BUỘC link click phải là thẻ a
