@@ -9,18 +9,18 @@ Tạo xài lại cho các project React khác
 
 ## How do I use it?
 
-Install
+## Install
 
 ```html
 npm i cmp-adtima
 ```
 
-Import
+## Import
 ```js
 import { CMP } from 'cmp-adtima';
 ```
 
-Sử dụng
+## Sử dụng
 
 ```js
 <CMP 
@@ -51,7 +51,7 @@ Sử dụng
 />
 ```
 
-Style
+## Style
 
 Để style lại checkbox theo từng project . Copy những phần này vào root variables 
 
