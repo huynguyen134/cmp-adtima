@@ -69,22 +69,16 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 
 
 | Name| Default value| Type| Description
-| ------------- |:-------------:| -----:| :-----|
-| **op***      | -| *Object* | **op** là object dùng để khởi tạo term ban đầu thông qua *`'/digital-api/'`* bao gồm những field cần và đủ như <br/> **`organization_id`**: "*your id here*" <br/> **`term_id`**: "*your term id here*"	<br/> **`extend_app_id`**: "*your CAMPAIGN_ID*"	<br/> **`extend_app_name`**: "* your project name*"	<br/> **`extend_uid`**: "*your user id*"
-| **variablesObj***|   true   |    *Object* |
-| **cmpValid***|   false|    *Boolean* |
-| **getInitTerms***|   -|    *Function* |
-| **submitCount***|   -|    *Number* |
-| **getMapingKey**      | -|   *String* |
-| **handleOnChangeCheckbox** |   -   |    *Object* |
-| **handleLinkClick**|   -   |    *Function* |
-| **hideCheckAll**|   false|    *Boolean* |
-| **paddingChild**|   true   |    *Number* |
-
-
-| Name| Required| Description|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+| ------------- |:-------------:| -----| :-----|
+| **op***      | -| *`object`* | **op** là object dùng để khởi tạo term ban đầu thông qua *`'/digital-api/'`* bao gồm những field cần và đủ như  <br/> **`organization_id`**: "*your id here*" <br/> **`term_id`**: "*your term id here*"	<br/> **`extend_app_id`**: "*your CAMPAIGN_ID*"	<br/> **`extend_app_name`**: "* your project name*"	<br/> **`extend_uid`**: "*your user id*"
+| **variablesObj***|   true   |    *`object`* | Dùng để render phần nội dung của checkbox và error message của checkbox đó <br/> **`Object key`**: Lấy consent_name trong terms để làm key ví dụ: *`Đủ 18 tuổi`* <br/> **`errorMessage:`** hiển thị error message của consent  tương ứng <br/> **`labelText`**: Hiển thị label text của checkbox tương ứng
+| **cmpValid***|   false|    *`boolean`* |
+| **getInitTerms***|   -|    *`function`* |
+| **submitCount***|   -|    *`number`* |
+| **getMapingKey**      | -|   *`string`* |
+| **handleOnChangeCheckbox** |   -   |    *`object`* |
+| **handleLinkClick**|   -   |    *`function`* |
+| **hideCheckAll**|   false|    *`boolean`* |
+| **paddingChild**|   true   |    *`number`* |
 
 
