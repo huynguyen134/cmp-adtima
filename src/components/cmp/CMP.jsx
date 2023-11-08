@@ -31,6 +31,9 @@ const CMP = (props) => {
 	console.log('termName', termName)
 
 	const fetchData = async () => {
+		op.platform = getOS() || '';
+		op.browser = getBrowser() || '';
+		console.log('initop, ', op)
 		const termResponse = await getTerms(op);
 		if (termResponse?.data_obs) {
 			setCmpKey(termResponse?.data_obs);

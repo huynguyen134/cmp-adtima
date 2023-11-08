@@ -27,11 +27,9 @@ import { CMP } from 'cmp-adtima';
   op={{
     organization_id: 'xxxxxxxxxx', // Nếu là người mới liên hiện TamNN để được cung cấp
     term_id: 'xxxxxx', // Nếu là người mới liên hiện TamNN để được cung cấp
-    extend_app_id: 0,
-    extend_app_name: 'Adtima Gamelab', 
-    extend_uid: 0,
-    platform: '',
-    browser: '',
+	extend_app_id: '', //Nếu có vui lòng truyền qua thường sẽ là CAMPAIGN_ID
+	extend_app_name: 'Adtima Gamelab', // Tên dự án
+	extend_uid: '', // Nếu có vui lòng truyền qua tường sẽ là _id của user
   }}
   getMapingKey={getMapingKey} // Return term init object từ /digital-api , Bạn có thể lấy được cmp_key ở đây thông qua value.data_obs
   handleOnChangeCheckbox={handleOnChangeCheckbox}  // Trả về data khi sự kiện onChange của checkbox bên trong trigger , dùng dữ liệu này để đẩy lên API postConsents thông qua cmp_properties
