@@ -15,7 +15,7 @@ Install
 npm i cmp-adtima
 ```
 
-Import vào project
+Import
 ```js
 import { CMP } from 'cmp-adtima';
 ```
@@ -36,11 +36,11 @@ Sử dụng
   getMapingKey={getMapingKey} // Return term init object từ /digital-api , Bạn có thể lấy được cmp_key ở đây thông qua value.data_obs
   handleOnChangeCheckbox={handleOnChangeCheckbox}  // Trả về data khi sự kiện onChange của checkbox bên trong trigger , dùng dữ liệu này để đẩy lên API postConsents thông qua cmp_properties
   variablesObj={{ //Dùng để hiển thị error_message của checkbox khi validate
-	"Đủ 18 tuổi": { // Lấy consent_name để hiển thị
+    "Đủ 18 tuổi": { // Lấy consent_name để hiển thị
 	  errorMessage: 'Vui Lòng đồn(g ý nếu bạn trên 18', // Error message của consents tương ứng
 	  labelText: `<div>Tui đã trên 18 tuổi</div>`, // Label text của constent bạn muốn hiển thị cho 
 	},
-	"Chính sách thỏa thuận sử dụng dịch vụ": {
+    "Chính sách thỏa thuận sử dụng dịch vụ": {
 	  errorMessage: 'Vui Lòng đồng ý dịch vụ',
 	  labelText: `<div>Đồng ý điều <a href="https://adtima.vn/thoa-thuan-su-dung-dich-vu" target="_blank" class="test">khoản</a> haha<div>`,
 	}
