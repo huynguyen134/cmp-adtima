@@ -5,7 +5,7 @@ import { CmpChild, CmpGroup, CustomCheckbox, CustomCheckboxLabel } from './style
 
 
 const CMP = (props) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, isCmpValidProps, variablesObj, handleLinkClick } = props;
+	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, isPostConsentsDone=false } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -75,7 +75,7 @@ const CMP = (props) => {
 			handleOnChangeCheckbox && handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
 
 			//Check if CMP form valid or not
-			isCmpValidProps(checkCMPValid())
+			isCmpValidProps && isCmpValidProps(checkCMPValid())
 			return;
 		}
 		// setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
@@ -89,11 +89,10 @@ const CMP = (props) => {
 		console.log('checked', checked)
 
 		//Check if CMP form valid or not
-		isCmpValidProps(checkCMPValid())
+		isCmpValidProps && isCmpValidProps(checkCMPValid())
 
 
 	};
-
 
 
 	const hadleClickLinkChild = (event, val) => {
@@ -112,7 +111,14 @@ const CMP = (props) => {
 
 	}, [selectedCMP])
 
-	useEffect(() => {
+	useEffect( async () => {
+		if(isFormValid && checkCMPValid() ) {
+			op.cmp_properties = checkProp2cmpProp(checkProperty);
+			op.mapping_key = cmpKey;
+			// console.log('op when valid form and cmp', op)
+			const statusPostConsents = await postConsents(op);
+			statusPostConsents.length ? isPostConsentsDone(true) : isPostConsentsDone(false);
+		}
 		// if (submitCount > 0) {
 		// 	let isCMPValid = Object.values(checkProperty).every(value => value.property_value);
 		// 	console.log('isCMPValid', isCMPValid)
