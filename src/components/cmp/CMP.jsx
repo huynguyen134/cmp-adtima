@@ -56,6 +56,8 @@ const CMP = (props) => {
 
 		}
 	};
+
+	console.log('initop, ', op)
 	console.log('termName', termName);
 
 	const checkCMPValid = () => {
