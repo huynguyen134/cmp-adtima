@@ -72,13 +72,13 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 | ------------- |:-------------:| -----| :-----|
 | **op***      | -| *`object`* | **op** là object dùng để khởi tạo term ban đầu thông qua *`'/digital-api/'`* bao gồm những field cần và đủ như  <br/> **`organization_id`**: "*your id here*" <br/> **`term_id`**: "*your term id here*"	<br/> **`extend_app_id`**: "*your CAMPAIGN_ID*"	<br/> **`extend_app_name`**: "* your project name*"	<br/> **`extend_uid`**: "*your user id*"
 | **variablesObj***|   true   |    *`object`* | Dùng để render phần nội dung của checkbox và error message của checkbox đó <br/> **`Object key`**: lấy consent_name trong terms để làm key ví dụ: *`Đủ 18 tuổi`* <br/> **`errorMessage:`** hiển thị error message của consent  tương ứng <br/> **`labelText`**: hiển thị label text của checkbox tương ứng
-| **cmpValid***|   false|    *`boolean`* |
-| **getInitTerms***|   -|    *`function`* |
-| **submitCount***|   -|    *`number`* |
-| **getMapingKey**      | -|   *`string`* |
-| **handleOnChangeCheckbox** |   -   |    *`object`* |
-| **handleLinkClick**|   -   |    *`function`* |
-| **hideCheckAll**|   false|    *`boolean`* |
-| **paddingChild**|   true   |    *`number`* |
+| **cmpValid***|   false|    *`boolean`* | Giá trị **`true`** khi tất cả các checkbox được check và **`false`** khi chưa check đủ validate sẽ thực thi trong này , dùng để validate bên ngoài form
+| **getInitTerms***|   -|    *`function`* | Trả về object init terms 
+| **submitCount***|   -|    *`number`* | Dùng để validate của CMP nếu sử dung useForm thì xài **`formState.submitCount`** hoặc tạo biến **`count`** increment
+| **getMapingKey**      | -|   *`string`* | Dùng để bỏ vào **`cmp_key`*** khi submit form
+| **handleOnChangeCheckbox** |   -   |    *`object`* | Được gọi khi mỗi lần onChange checkbox
+| **handleLinkClick**|   -   |    *`function`* | Được gọi khi nhấn vào đường link trong **`labelText`** <br/>***Lưu ý***: Thẻ tag trong **`labelText`** phải là thẻ **`a`**
+| **hideCheckAll**|   false|    *`boolean`* | Giá trị **`true`** thì sẽ ẩn checkbox *`Đồng ý tất cả`* 
+| **paddingChild**|   true   |    *`number`* | Giá trị được tính theo **`rem`** phòng khi trường hợp **hideCheckAll** có giá trị là **`true`**
 
 
