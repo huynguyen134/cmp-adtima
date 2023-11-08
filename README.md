@@ -8,6 +8,10 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 
-# CMP
-
-Đây là CMP package dùng cho NĐ 13
+## What does it do?
+	Đây là CMP package dùng cho NĐ 13
+## How do I use it?
+	Install
+```html
+npm i cmp-adtima
+```
