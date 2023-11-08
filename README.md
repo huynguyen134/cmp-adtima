@@ -79,6 +79,6 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 | **handleOnChangeCheckbox** |   -   |    *`object`* | Được gọi khi mỗi lần onChange checkbox
 | **handleLinkClick**|   -   |    *`function`* | Được gọi khi nhấn vào đường link trong **`labelText`** <br/>***Lưu ý***: Thẻ tag trong **`labelText`** phải là thẻ **`a`**
 | **hideCheckAll**|   false|    *`boolean`* | Giá trị **`true`** thì sẽ ẩn checkbox *`Đồng ý tất cả`* 
-| **paddingChild**|   true   |    *`number`* | Giá trị được tính theo **`rem`** phòng khi trường hợp **hideCheckAll** có giá trị là **`true`**
+| **paddingChild**|   1   |    *`number`* | Giá trị được tính theo **`rem`** phòng khi trường hợp **hideCheckAll** có giá trị là **`true`**
 
 
