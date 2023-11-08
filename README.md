@@ -4,15 +4,11 @@
 NĐ 13 thực thi thì mới có cái này , chứ bình thường ai rãnh đâu mà làm ?
 # What does it do?
 
-  
-
 Tạo xài lại cho các project React khác
 
-  
 # How do I use it?
 
-
- **Install**
+**Install**
 
 ```js
 npm i cmp-adtima
@@ -68,3 +64,27 @@ import { CMP } from  'cmp-adtima';
 --cmp-icon-checkbox-checked-color: yellow; /* checkbox icon check color */
 --cmp-error-message-color: red; /* error message color */
 ```
+## Props
+Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are also available.
+
+
+| Name| Default value| Type| Description
+| ------------- |:-------------:| -----:| :-----|
+| **op***      | -| *Object* | **op** là object dùng để khởi tạo term ban đầu thông qua *`'/digital-api/'`* bao gồm những field cần và đủ như <br/> **`organization_id`**: "*your id here*" <br/> **`term_id`**: "*your term id here*"	<br/> **`extend_app_id`**: "*your CAMPAIGN_ID*"	<br/> **`extend_app_name`**: "* your project name*"	<br/> **`extend_uid`**: "*your user id*"
+| **variablesObj***|   true   |    *Object* |
+| **cmpValid***|   false|    *Boolean* |
+| **getInitTerms***|   -|    *Function* |
+| **submitCount***|   -|    *Number* |
+| **getMapingKey**      | -|   *String* |
+| **handleOnChangeCheckbox** |   -   |    *Object* |
+| **handleLinkClick**|   -   |    *Function* |
+| **hideCheckAll**|   false|    *Boolean* |
+| **paddingChild**|   true   |    *Number* |
+
+
+| Name| Required| Description|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+
+

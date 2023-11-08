@@ -7,7 +7,7 @@ import DOMPurify from 'dompurify';
 
 
 const CMP = (props) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, cmpValid, variablesObj, handleLinkClick, hideCheckAll = false, paddingChild
+	const { op, getInitTerms, getMapingKey, handleOnChangeCheckbox, submitCount, cmpValid = false, variablesObj, handleLinkClick, hideCheckAll = false, paddingChild
 	} = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
@@ -40,6 +40,7 @@ const CMP = (props) => {
 			op['mapping_key'] = termResponse?.data_obs;
 			//send cmp key to props
 			console.log(termResponse?.data_obs)
+			getInitTerms && getInitTerms(termResponse)
 			getMapingKey && getMapingKey(termResponse?.data_obs)
 		}
 
