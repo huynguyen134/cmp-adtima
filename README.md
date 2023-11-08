@@ -9,9 +9,13 @@ Currently, two official plugins are available:
 
 
 ## What does it do?
-	Đây là CMP package dùng cho NĐ 13
+
+Đây là CMP package dùng cho NĐ 13
+
 ## How do I use it?
-	Install
+
+Install
+
 ```html
 npm i cmp-adtima
 ```
