@@ -70,7 +70,7 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 
 | Name| Default value| Type| Description
 | ------------- |:-------------:| -----| :-----|
-| **op***      | -| *`object`* | **op** là object dùng để khởi tạo term ban đầu thông qua *`'/digital-api/'`* bao gồm những field cần và đủ như  <br/> **`organization_id`**: "*your id here*" <br/> **`term_id`**: "*your term id here*"	<br/> **`extend_app_id`**: "*your CAMPAIGN_ID*"	<br/> **`extend_app_name`**: "* your project name*"	<br/> **`extend_uid`**: "*your user id*"
+| **op***      | -| *`object`* | **op** là object dùng để khởi tạo term ban đầu thông qua *`'/digital-api/'`* bao gồm những field cần và đủ như  <br/> **`organization_id`**: "*your id here*" <br/> **`term_id`**: "*your term id here*"	<br/> **`extend_app_id`**: "*your CAMPAIGN_ID*"	<br/> **`extend_app_name`**: "*your project name*"	<br/> **`extend_uid`**: "*your user id*"
 | **variablesObj***|   true   |    *`object`* | Dùng để render phần nội dung của checkbox và error message của checkbox đó <br/> **`Object key`**: lấy consent_name trong terms để làm key ví dụ: *`Đủ 18 tuổi`* <br/> **`errorMessage:`** hiển thị error message của consent  tương ứng <br/> **`labelText`**: hiển thị label text của checkbox tương ứng
 | **cmpValid***|   false|    *`boolean`* | Giá trị **`true`** khi tất cả các checkbox được check và **`false`** khi chưa check đủ validate sẽ thực thi trong này , dùng để validate bên ngoài form
 | **getInitTerms***|   -|    *`function`* | Trả về object init terms 
