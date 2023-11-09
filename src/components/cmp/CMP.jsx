@@ -30,7 +30,6 @@ const CMP = (props) => {
 
 
 	const fetchData = async () => {
-
 		op.platform = getOS() || '';
 		op.browser = getBrowser() || '';
 		const termResponse = await getTerms(op);
@@ -38,8 +37,8 @@ const CMP = (props) => {
 			setCmpKey(termResponse?.data_obs);
 			// op['mapping_key'] = termResponse?.data_obs;
 			//send cmp key to props
-			console.log(termResponse?.data_obs)
-			getInitTerms && getInitTerms(termResponse)
+			console.log('term', termResponse?.data_obs)
+			// getInitTerms && getInitTerms(termResponse)
 			// getMapingKey && getMapingKey(termResponse?.data_obs)
 		}
 
@@ -50,7 +49,7 @@ const CMP = (props) => {
 			// Create TERM_CHECK_PROPERTY
 			// Update value when onChange Term
 			// Push to op and push to /cmp-consents in postConsents
-			const TERM_CHECK_PROPERTY = termProp2checkProp(tempRecord?.term_properties, variablesObj);
+			const TERM_CHECK_PROPERTY = termProp2checkProp(tempRecord?.term_properties);
 			// Set init for checkProperty state
 			setCheckProperty(TERM_CHECK_PROPERTY);
 
@@ -59,6 +58,8 @@ const CMP = (props) => {
 
 
 	const checkCMPValid = () => {
+	
+
 		return Object.values(checkProperty).every(value => value.property_value)
 	}
 
@@ -105,9 +106,7 @@ const CMP = (props) => {
 
 
 	const callApiConsents = async () => {
-		setCount(true)
-
-		console.log('isFormValid', isFormValid)
+	
 		let isCmpValid = checkCMPValid();
 		console.log('isCmpValid', isCmpValid)
 
@@ -128,7 +127,8 @@ const CMP = (props) => {
 	}
 
 	useImperativeHandle(forwardedRef, () => ({
-		callApiConsents
+		callApiConsents,
+		checkCMPValid
 	}))
 
 	// useEffect(() => {
@@ -180,7 +180,8 @@ const CMP = (props) => {
 									{variablesObj?.[valueTerm?.name].link?.length && <a onClick={(event) => hadleClickLinkChild(event, valueTerm)} >{variablesObj?.[valueTerm?.name].labelText}</a>}
 								</CustomCheckboxLabel>
 							</CmpChild>
-							{!checkProperty?.[valueTerm?._id].property_value && count && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>}
+							{/* {!checkProperty?.[valueTerm?._id].property_value && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>} */}
+							{checkProperty?.[valueTerm?._id].error_message && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>}
 						</>
 					)
 				})}

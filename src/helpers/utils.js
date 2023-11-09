@@ -129,9 +129,8 @@ export const CMP_FORM_VALIDATES = {
 	},
 };
 
-export function termProp2checkProp(termProp, errorMessage) {
+export function termProp2checkProp(termProp) {
 	const TERM_CHECK_PROPERTY = {};
-	console.log('errorMessage', errorMessage)
 
 	termProp?.map((prop) => {
 		TERM_CHECK_PROPERTY[prop._id] = {
@@ -139,7 +138,7 @@ export function termProp2checkProp(termProp, errorMessage) {
 			property_value: false,
 			property_type: prop.type,
 			property_name: prop.name,
-			error_message: errorMessage?.[prop.name].errorMessage || ''
+			error_message: ''
 		};
 	});
 
