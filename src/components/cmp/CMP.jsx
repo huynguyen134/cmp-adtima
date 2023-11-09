@@ -64,7 +64,8 @@ const CMP = (props) => {
 					...prev,
 					[ele.property_id]: {
 						...prev[ele.property_id],
-						error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
+						error_message: variablesObj?.[ele.property_name].errorMessage
+						// error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
 					}
 				})}
 			)
