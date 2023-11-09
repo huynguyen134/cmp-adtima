@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react'
 import { setCookie, checkProp2cmpProp, getBrowser, getOS, getTerms, postConsents, termProp2checkProp } from '../../helpers/utils';
 
 import { CmpChild, CmpGroup, CustomCheckbox, CustomCheckboxLabel, ErrorMessage } from './styles'
@@ -7,7 +7,7 @@ import DOMPurify from 'dompurify';
 
 
 const CMP = (props) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, isPostConsentsDone=false } = props;
+	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, isPostConsentsDone = false, hideCheckAll = false, paddingChild, forwardedRef } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -27,20 +27,18 @@ const CMP = (props) => {
 		}
 	};
 
-	console.log('termName', termName)
 
 	const fetchData = async () => {
 		op.platform = getOS() || '';
 		op.browser = getBrowser() || '';
-		console.log('initop, ', op)
 		const termResponse = await getTerms(op);
 		if (termResponse?.data_obs) {
 			setCmpKey(termResponse?.data_obs);
-			op['mapping_key'] = termResponse?.data_obs;
+			// op['mapping_key'] = termResponse?.data_obs;
 			//send cmp key to props
 			console.log(termResponse?.data_obs)
 			getInitTerms && getInitTerms(termResponse)
-			getMapingKey && getMapingKey(termResponse?.data_obs)
+			// getMapingKey && getMapingKey(termResponse?.data_obs)
 		}
 
 		if (termResponse?.term?.record?.length) {
@@ -57,8 +55,6 @@ const CMP = (props) => {
 		}
 	};
 
-	console.log('initop, ', op)
-	console.log('termName', termName);
 
 	const checkCMPValid = () => {
 		return Object.values(checkProperty).every(value => value.property_value)
@@ -68,13 +64,10 @@ const CMP = (props) => {
 		const { value, checked } = event.target;
 		// Update status property_value in TERM_CHECK_PROPERTY
 		if (checkboxId) checkProperty[checkboxId].property_value = checked;
-		console.log(checkProperty)
 
 		handleOnChangeCheckbox && handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
 
 		if (value === 'isAcceptByParent') {
-			console.log('check all', selectedCMP)
-			console.log('check all', termName)
 			setSelectedCMP(selectedCMP.length === termName.length ? [] : termName);
 			//  Update status property_value in TERM_CHECK_PROPERTY when check all
 			Object.keys(checkProperty).forEach((key) => {
@@ -93,8 +86,6 @@ const CMP = (props) => {
 		const index = list.indexOf(value);
 		index === -1 ? list.push(value) : list.splice(index, 1);
 		setSelectedCMP(list);
-		console.log('value', value)
-		console.log('checked', checked)
 
 		//Check if CMP form valid or not
 		isCmpValidProps && isCmpValidProps(checkCMPValid())
@@ -105,10 +96,8 @@ const CMP = (props) => {
 		if (event.target.tagName === 'A') {
 			event.stopPropagation();
 			event.preventDefault();
-			console.log(event.target)
-			console.log('tagName', event.target.tagName)
 			handleLinkClick(val);
-		};
+		}
 
 	}
 
@@ -122,27 +111,34 @@ const CMP = (props) => {
 
 	}, [selectedCMP])
 
-	useEffect( async () => {
-		if(isFormValid && checkCMPValid() ) {
-			op.cmp_properties = checkProp2cmpProp(checkProperty);
-			op.mapping_key = cmpKey;
-			// console.log('op when valid form and cmp', op)
-			const statusPostConsents = await postConsents(op);
-			statusPostConsents.length ? isPostConsentsDone(true) : isPostConsentsDone(false);
+
+	const callApiConsents = async () => {
+		console.log('isFormValid', isFormValid)
+		let isCmpValid = checkCMPValid();
+		console.log('isCmpValid', isCmpValid)
+		if (!isFormValid || !isCmpValid) return;
+		op.cmp_properties = checkProp2cmpProp(checkProperty);
+		op.mapping_key = cmpKey;
+		console.log('op truoc khi gui', op)
+		// console.log('op when valid form and cmp', op)
+
+		const statusPostConsents = await postConsents(op);
+		console.log('statusPostConsents 2', statusPostConsents)
+		if (statusPostConsents) {
+			console.log('post consent thành công')
+			console.log('mapping key trước khi gửi', cmpKey)
+			getMapingKey(cmpKey) // Gửi mapping key ra ngoài , có mapping key là có tiền
 		}
-		// if (submitCount > 0) {
-		// 	let isCMPValid = Object.values(checkProperty).every(value => value.property_value);
-		// 	console.log('isCMPValid', isCMPValid)
-		// 	cmpValid(isCMPValid)
 
-		// }
-		// if (submitCount > 0) {
-		//     if (selectedCMP.length < 2) {
-		//         setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
+	}
 
-		//     } else { clearErrors('isAcceptByParent') }
-		// }
-	}, [submitCount])
+	useImperativeHandle(forwardedRef, () => ({
+		callApiConsents
+	}))
+
+	// useEffect(() => {
+
+	// }, [submitCount])
 
 	useEffect(() => {
 		fetchData();
@@ -151,7 +147,7 @@ const CMP = (props) => {
 
 
 	return (
-		<div id="adtima-cmp-wrapper">
+		<div id="adtima-cmp-wrapper" ref={forwardedRef}>
 			{!hideCheckAll && <CmpChild id="adtima-cmp-select-all">
 				<CustomCheckbox
 					// {...register('isAcceptByParent', { ...REGISTER_FORM_VALIDATES.isAcceptByParent })}
@@ -197,4 +193,4 @@ const CMP = (props) => {
 	)
 }
 
-export default CMP
+export default forwardRef(CMP);
