@@ -149,9 +149,12 @@ export function checkProp2cmpProp(checkProperty) {
 	const cmpProperties = [];
 	for (const property in checkProperty) {
 		const tmp = checkProperty[property];
+		delete tmp['error_message']; // this will remove the error_message field from tmp
 		const copy_tmp = {
+			
 			...tmp,
 			property_value: tmp['property_value'] ? 1 : 0,
+			
 		};
 		cmpProperties.push(copy_tmp);
 	}

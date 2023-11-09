@@ -56,19 +56,53 @@ const CMP = (props) => {
 		}
 	};
 
+	const handleSetErrorMessage = () => {
+		Object.values(checkProperty).map((ele) => {
+			setCheckProperty(prev =>  {
+				console.log('prev[ele.property_id].property_value', prev[ele.property_id].property_value)
+				return ({
+					...prev,
+					[ele.property_id]: {
+						...prev[ele.property_id],
+						error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
+					}
+				})}
+			)
+		})
+	}
 
 	const checkCMPValid = () => {
-	
+		// handleSetErrorMessage();
+		 Object.values(checkProperty).map((ele) => {
+			setCheckProperty(prev =>  {
+				console.log('prev[ele.property_id].property_value', prev[ele.property_id].property_value)
+				return ({
+					...prev,
+					[ele.property_id]: {
+						...prev[ele.property_id],
+						error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
+					}
+				})}
+			)
+		})
+			// if(ele.property_value) {
+				
+			// } else {
+			// 	console.log(ele.property_name)
+			// 	console.log(variablesObj, variablesObj?.[`${ele.property_name}`], variablesObj?.[ele.property_name].errorMessage)
+			// 	setCheckProperty( {...ele, error_message: variablesObj?.[ele.property_name].errorMessage})
+			// }})
+			return Object.values(checkProperty).every(value => value.property_value)
 
-		return Object.values(checkProperty).every(value => value.property_value)
 	}
+	console.log('checkProperty3', checkProperty)
 
 	const handleChange = (event, checkboxId) => {
 		const { value, checked } = event.target;
 		// Update status property_value in TERM_CHECK_PROPERTY
 		if (checkboxId) checkProperty[checkboxId].property_value = checked;
 
-		handleOnChangeCheckbox && handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
+		handleOnChangeCheckbox && handleOnChangeCheckbox(checkProperty);
 
 		if (value === 'isAcceptByParent') {
 			setSelectedCMP(selectedCMP.length === termName.length ? [] : termName);
@@ -76,8 +110,9 @@ const CMP = (props) => {
 			Object.keys(checkProperty).forEach((key) => {
 				checkProperty[key].property_value = checked ? true : false;
 			});
-			handleOnChangeCheckbox && handleOnChangeCheckbox(checkProp2cmpProp(checkProperty));
-
+		
+			handleOnChangeCheckbox && handleOnChangeCheckbox(checkProperty);
+			
 			//Check if CMP form valid or not
 			isCmpValidProps && isCmpValidProps(checkCMPValid())
 			return;
@@ -85,11 +120,12 @@ const CMP = (props) => {
 		// setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
 
 		// added below code to update selected options
+		
 		const list = [...selectedCMP];
 		const index = list.indexOf(value);
 		index === -1 ? list.push(value) : list.splice(index, 1);
 		setSelectedCMP(list);
-
+		
 		//Check if CMP form valid or not
 		isCmpValidProps && isCmpValidProps(checkCMPValid())
 	};
@@ -106,7 +142,7 @@ const CMP = (props) => {
 
 
 	const callApiConsents = async () => {
-	
+		
 		let isCmpValid = checkCMPValid();
 		console.log('isCmpValid', isCmpValid)
 
@@ -181,7 +217,8 @@ const CMP = (props) => {
 								</CustomCheckboxLabel>
 							</CmpChild>
 							{/* {!checkProperty?.[valueTerm?._id].property_value && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>} */}
-							{checkProperty?.[valueTerm?._id].error_message && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>}
+							{!checkProperty?.[valueTerm?._id]?.property_value && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id]?.error_message}</ErrorMessage>}
+							
 						</>
 					)
 				})}
