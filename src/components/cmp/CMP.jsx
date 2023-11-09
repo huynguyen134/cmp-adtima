@@ -13,6 +13,7 @@ const CMP = (props) => {
 	const [selectedCMP, setSelectedCMP] = useState([]);
 	const [termName, setTermName] = useState([]);
 	const [cmpKey, setCmpKey] = useState('');
+	const [count, setCount] = useState(false);
 
 	const isAllSelected = termName.length > 0 && selectedCMP.length === termName.length;
 
@@ -29,6 +30,7 @@ const CMP = (props) => {
 
 
 	const fetchData = async () => {
+
 		op.platform = getOS() || '';
 		op.browser = getBrowser() || '';
 		const termResponse = await getTerms(op);
@@ -101,21 +103,14 @@ const CMP = (props) => {
 
 	}
 
-	useEffect(() => {
-		// if (submitCount > 0) {
-		//     if (selectedCMP.length < 2) {
-		//         setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
-
-		//     } else { clearErrors('isAcceptByParent') }
-		// }
-
-	}, [selectedCMP])
-
 
 	const callApiConsents = async () => {
+		setCount(true)
+
 		console.log('isFormValid', isFormValid)
 		let isCmpValid = checkCMPValid();
 		console.log('isCmpValid', isCmpValid)
+
 		if (!isFormValid || !isCmpValid) return;
 		op.cmp_properties = checkProp2cmpProp(checkProperty);
 		op.mapping_key = cmpKey;
@@ -142,6 +137,7 @@ const CMP = (props) => {
 
 	useEffect(() => {
 		fetchData();
+
 		// returned function will be called on component unmount 
 	}, []);
 
@@ -184,7 +180,7 @@ const CMP = (props) => {
 									{variablesObj?.[valueTerm?.name].link?.length && <a onClick={(event) => hadleClickLinkChild(event, valueTerm)} >{variablesObj?.[valueTerm?.name].labelText}</a>}
 								</CustomCheckboxLabel>
 							</CmpChild>
-							{!checkProperty?.[valueTerm?._id].property_value && submitCount > 0 && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>}
+							{!checkProperty?.[valueTerm?._id].property_value && count && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>}
 						</>
 					)
 				})}
