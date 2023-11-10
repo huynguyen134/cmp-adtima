@@ -37,7 +37,6 @@ const CMP = (props) => {
 			setCmpKey(termResponse?.data_obs);
 			// op['mapping_key'] = termResponse?.data_obs;
 			//send cmp key to props
-			console.log('term', termResponse?.data_obs)
 			// getInitTerms && getInitTerms(termResponse)
 			// getMapingKey && getMapingKey(termResponse?.data_obs)
 		}
@@ -56,28 +55,10 @@ const CMP = (props) => {
 		}
 	};
 
-	const handleSetErrorMessage = () => {
-		Object.values(checkProperty).map((ele) => {
-			setCheckProperty(prev => {
-				console.log('prev[ele.property_id].property_value', prev[ele.property_id].property_value)
-				return ({
-					...prev,
-					[ele.property_id]: {
-						...prev[ele.property_id],
-						error_message: variablesObj?.[ele.property_name].errorMessage
-						// error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
-					}
-				})
-			}
-			)
-		})
-	}
-
 	const checkCMPValid = () => {
 		// handleSetErrorMessage();
 		Object.values(checkProperty).map((ele) => {
 			setCheckProperty(prev => {
-				console.log('prev[ele.property_id].property_value', prev[ele.property_id].property_value)
 				return ({
 					...prev,
 					[ele.property_id]: {
@@ -88,17 +69,9 @@ const CMP = (props) => {
 			}
 			)
 		})
-		// if(ele.property_value) {
-
-		// } else {
-		// 	console.log(ele.property_name)
-		// 	console.log(variablesObj, variablesObj?.[`${ele.property_name}`], variablesObj?.[ele.property_name].errorMessage)
-		// 	setCheckProperty( {...ele, error_message: variablesObj?.[ele.property_name].errorMessage})
-		// }})
 		return Object.values(checkProperty).every(value => value.property_value)
 
 	}
-	console.log('checkProperty3', checkProperty)
 
 	const handleChange = (event, checkboxId) => {
 		const { value, checked } = event.target;
@@ -147,19 +120,13 @@ const CMP = (props) => {
 	const callApiConsents = async () => {
 
 		let isCmpValid = checkCMPValid();
-		console.log('isCmpValid', isCmpValid)
 
 		if (!isFormValid || !isCmpValid) return;
 		op.cmp_properties = checkProp2cmpProp(checkProperty);
 		op.mapping_key = cmpKey;
-		console.log('op truoc khi gui', op)
-		// console.log('op when valid form and cmp', op)
 
 		const statusPostConsents = await postConsents(op);
-		console.log('statusPostConsents 2', statusPostConsents)
 		if (statusPostConsents) {
-			console.log('post consent thành công')
-			console.log('mapping key trước khi gửi', cmpKey)
 			getMapingKey(cmpKey) // Gửi mapping key ra ngoài , có mapping key là có tiền
 		}
 
@@ -170,9 +137,7 @@ const CMP = (props) => {
 		checkCMPValid
 	}))
 
-	// useEffect(() => {
 
-	// }, [submitCount])
 
 	useEffect(() => {
 		fetchData();
