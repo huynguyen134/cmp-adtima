@@ -28,10 +28,11 @@ export const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
 	outline: 0;
 	padding: 0 !important;
 	vertical-align: text-top;
-	height: 20px;
-	width: 20px;
-	min-width: 20px;
+	height: var(--cmp-checkbox-height, 20px);
+	width: var(--cmp-checkbox-width, 20px);
+	min-width: var(--cmp-checkbox-width, 20px);
 	align-self: flex-start;
+    margin-top: 0.1rem;
 	text-align: center;
 	opacity: 1;
 	
