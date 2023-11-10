@@ -156,9 +156,10 @@ const CMP = (props) => {
 					value='isAcceptByParent'
 					onChange={handleChange}
 					checked={isAllSelected}
+					id="isAcceptByParent"
 					className="cmp-adtima-checkbox"
 				/>
-				<CustomCheckboxLabel htmlFor="cmp-checkbox-all" className="cmp-adtima-label">{term?.name}</CustomCheckboxLabel>
+				<CustomCheckboxLabel htmlFor="isAcceptByParent" className="cmp-adtima-label">{term?.name}</CustomCheckboxLabel>
 			</CmpChild>}
 
 
