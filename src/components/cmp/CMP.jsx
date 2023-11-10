@@ -7,7 +7,7 @@ import DOMPurify from 'dompurify';
 
 
 const CMP = forwardRef((props, ref) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, isPostConsentsDone = false, hideCheckAll = false, paddingChild } = props;
+	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, isPostConsentsDone = false, hideCheckAll = false } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -163,7 +163,7 @@ const CMP = forwardRef((props, ref) => {
 			</CmpChild>}
 
 
-			<CmpGroup className="cmp-adtima-group" padding={paddingChild ? paddingChild : 1} >
+			<CmpGroup className="cmp-adtima-group">
 				{term?.term_properties?.map((valueTerm, index) => {
 					// let nameCheckbox = getKeyFormByName(valueTerm?.name);
 					return (
