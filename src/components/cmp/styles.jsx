@@ -75,7 +75,7 @@ export const CustomCheckboxLabel = styled.label`
 `
 
 export const CmpGroup = styled.div`
-	padding-left: ${props => props.padding + 'rem'};
+	padding-left: 1rem;
 `;
 
 
