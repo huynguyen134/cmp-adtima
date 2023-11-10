@@ -6,8 +6,8 @@ import parse from 'html-react-parser';
 import DOMPurify from 'dompurify';
 
 
-const CMP = (props) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, isPostConsentsDone = false, hideCheckAll = false, paddingChild, forwardedRef } = props;
+const CMP = forwardRef((props, ref) => {
+	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, isPostConsentsDone = false, hideCheckAll = false, paddingChild } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -132,7 +132,7 @@ const CMP = (props) => {
 
 	}
 
-	useImperativeHandle(forwardedRef, () => ({
+	useImperativeHandle(ref, () => ({
 		callApiConsents,
 		checkCMPValid
 	}))
@@ -147,7 +147,7 @@ const CMP = (props) => {
 
 
 	return (
-		<div ref={forwardedRef} className={classes}>
+		<div ref={ref} className={classes}>
 			{!hideCheckAll && <CmpChild className="cmp-adtima-checkox-all">
 				<CustomCheckbox
 					// {...register('isAcceptByParent', { ...REGISTER_FORM_VALIDATES.isAcceptByParent })}
@@ -167,8 +167,8 @@ const CMP = (props) => {
 				{term?.term_properties?.map((valueTerm, index) => {
 					// let nameCheckbox = getKeyFormByName(valueTerm?.name);
 					return (
-						<>
-							<CmpChild key={`checkbox_${index}`} className='cmp-adtima-child'>
+						<div key={`checkbox_${valueTerm._id}`} className="cmp-adtima-group-child">
+							<CmpChild className='cmp-adtima-child'>
 								<CustomCheckbox
 									id={`checkbox_${valueTerm._id}`}
 									name={valueTerm?._id}
@@ -187,12 +187,12 @@ const CMP = (props) => {
 							{/* {!checkProperty?.[valueTerm?._id].property_value && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>} */}
 							{!checkProperty?.[valueTerm?._id]?.property_value && <ErrorMessage className="cmp-adtima-error-message">{checkProperty?.[valueTerm?._id]?.error_message}</ErrorMessage>}
 
-						</>
+						</div>
 					)
 				})}
 			</CmpGroup>
 		</div>
 	)
-}
+})
 
-export default forwardRef(CMP);
+export default CMP;
