@@ -7,7 +7,7 @@ import DOMPurify from 'dompurify';
 
 
 const CMP = (props) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, isPostConsentsDone = false, hideCheckAll = false, paddingChild, forwardedRef } = props;
+	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, isPostConsentsDone = false, hideCheckAll = false, paddingChild, forwardedRef } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -147,8 +147,8 @@ const CMP = (props) => {
 
 
 	return (
-		<div id="adtima-cmp-wrapper" ref={forwardedRef}>
-			{!hideCheckAll && <CmpChild id="adtima-cmp-select-all">
+		<div ref={forwardedRef} className={classes}>
+			{!hideCheckAll && <CmpChild className="cmp-adtima-checkox-all">
 				<CustomCheckbox
 					// {...register('isAcceptByParent', { ...REGISTER_FORM_VALIDATES.isAcceptByParent })}
 					type="checkbox"
@@ -156,36 +156,35 @@ const CMP = (props) => {
 					value='isAcceptByParent'
 					onChange={handleChange}
 					checked={isAllSelected}
-					id="cmp-checkbox-all"
+					className="cmp-adtima-checkbox"
 				/>
-				<CustomCheckboxLabel htmlFor="cmp-checkbox-all">{term?.name}</CustomCheckboxLabel>
+				<CustomCheckboxLabel htmlFor="cmp-checkbox-all" className="cmp-adtima-label">{term?.name}</CustomCheckboxLabel>
 			</CmpChild>}
 
 
-			<CmpGroup id="cmp-term-wrapper" padding={paddingChild ? paddingChild : 1} >
+			<CmpGroup className="cmp-adtima-group" padding={paddingChild ? paddingChild : 1} >
 				{term?.term_properties?.map((valueTerm, index) => {
 					// let nameCheckbox = getKeyFormByName(valueTerm?.name);
 					return (
 						<>
-							<CmpChild key={`checkbox_${index}`} id={`cmp-child-${index}`}>
+							<CmpChild key={`checkbox_${index}`} className='cmp-adtima-child'>
 								<CustomCheckbox
 									id={`checkbox_${valueTerm._id}`}
 									name={valueTerm?._id}
 									type="checkbox"
+									className="cmp-adtima-checkbox"
 									// {...register(nameCheckbox, { ...REGISTER_FORM_VALIDATES[nameCheckbox] })}
 									value={valueTerm?._id}
 									onChange={(e) => handleChange(e, valueTerm?._id)}
 									checked={selectedCMP.includes(valueTerm?._id)}
 								/>
-								<CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`} id={`cmp-checkbox-label-${index}`}>
-									<div onClick={(event) => hadleClickLinkChild(event, valueTerm)}>
-										<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(variablesObj?.[valueTerm?.name].labelText) }}></div>
-									</div>
+								<CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`} className="cmp-adtima-label-wrap">
+									<div onClick={(event) => hadleClickLinkChild(event, valueTerm)} className="cmp-adtima-label" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(variablesObj?.[valueTerm?.name].labelText) }}></div>
 									{variablesObj?.[valueTerm?.name].link?.length && <a onClick={(event) => hadleClickLinkChild(event, valueTerm)} >{variablesObj?.[valueTerm?.name].labelText}</a>}
 								</CustomCheckboxLabel>
 							</CmpChild>
 							{/* {!checkProperty?.[valueTerm?._id].property_value && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>} */}
-							{!checkProperty?.[valueTerm?._id]?.property_value && !isFormValid && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id]?.error_message}</ErrorMessage>}
+							{!checkProperty?.[valueTerm?._id]?.property_value && <ErrorMessage className="cmp-adtima-error-message">{checkProperty?.[valueTerm?._id]?.error_message}</ErrorMessage>}
 
 						</>
 					)
