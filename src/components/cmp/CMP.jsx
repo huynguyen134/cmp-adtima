@@ -7,13 +7,12 @@ import DOMPurify from 'dompurify';
 
 
 const CMP = forwardRef((props, ref) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, isPostConsentsDone = false, hideCheckAll = false } = props;
+	const { op, getMapingKey, handleOnChangeCheckbox,  classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, hideCheckAll = false } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
 	const [termName, setTermName] = useState([]);
 	const [cmpKey, setCmpKey] = useState('');
-	const [count, setCount] = useState(false);
 
 	const isAllSelected = termName.length > 0 && selectedCMP.length === termName.length;
 

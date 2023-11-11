@@ -1,4 +1,5 @@
 
+
  
 # CMP (Consent Management Platform)
 CMP (Consent Management Platform) là một công cụ phần mềm giúp bạn thu thập và quản lý thông tin cá nhân và sự đồng ý của người dùng theo các luật và quy định về bảo vệ dữ liệu, như GDPR của EU, CCPA của California, hay LGPD của Brazil. CMP cho phép bạn hiển thị các thông báo hoặc hộp thoại yêu cầu sự đồng ý của người dùng trước khi thu thập, chia sẻ, hay bán dữ liệu người dùng từ các nguồn trực tuyến như website, ứng dụng, cookie, video nhúng, và các công nghệ theo dõi khác CMP cũng giúp bạn lưu trữ, quản lý, và cập nhật các thông tin về sự đồng ý của người dùng, và truyền dữ liệu đó cho các đối tác quảng cáo hay dịch vụ bên dưới.
@@ -65,12 +66,14 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 | ------------- |:-------------:| -----| :-----|
 | **op***      | -| *`object`* | **op** là object dùng để khởi tạo term ban đầu thông qua *`'/digital-api/'`* bao gồm những field cần và đủ như  <br/> **`organization_id`**: "*your id here*" <br/> **`term_id`**: "*your term id here*"	<br/> **`extend_app_id`**: "*your CAMPAIGN_ID*"	<br/> **`extend_app_name`**: "*your project name*"	<br/> **`extend_uid`**: "*your user id*"
 | **getMapingKey***      | -|   *`string`* | Dùng để bỏ vào **`cmp_key`*** khi submit form có thể submit form khi key được trả về 
-| **variablesObj***|   true   |    *`object`* | Dùng để render phần nội dung của checkbox và error message của checkbox đó <br/> **`Object key`**: lấy consent_name trong terms để làm key ví dụ: *`Đủ 18 tuổi`* <br/> **`errorMessage:`** hiển thị error message của consent  tương ứng <br/> **`labelText`**: hiển thị label text của checkbox tương ứng
+| **variablesObj***|   -   |    *`object`* | Dùng để render phần nội dung của checkbox và error message của checkbox đó <br/> **`Object key`**: lấy consent_name trong terms để làm key ví dụ: *`Đủ 18 tuổi`* <br/> **`errorMessage:`** hiển thị error message của consent  tương ứng <br/> **`labelText`**: hiển thị label text của checkbox tương ứng
+| **isFormValid***|   false|    *`boolean`* | Giá trị cần phải có để **`CMP`** kiểm tra để **`callApiConsents`** được thực thi
 | **isCmpValidProps**|   false|    *`boolean`* | Giá trị **`true`** khi tất cả các checkbox được check và **`false`** khi chưa check đủ validate sẽ thực thi trong này , dùng để validate bên ngoài form
 | **getInitTerms**|   -|    *`function`* | Trả về object init terms 
 | **handleOnChangeCheckbox** |   -   |    *`object`* | Được gọi khi mỗi lần onChange checkbox
 | **handleLinkClick**|   -   |    *`function`* | Được gọi khi nhấn vào đường link trong **`labelText`** <br/>***Lưu ý***: Thẻ tag trong **`labelText`** phải là thẻ **`a`**
 | **hideCheckAll**|   false|    *`boolean`* | Giá trị **`true`** thì sẽ ẩn checkbox *`Đồng ý tất cả`* 
+| **classes**|   -|    *`string`* | Tạo class để style lại trong  **`CMP`** 
 
 
 ## Style
@@ -90,3 +93,5 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 --cmp-error-message-color: red; /* error message color */
 ```
 
+## Ví dụ ?
+ [MIMS-Miniapp](https://gitlab.zsl.zalo.services/zsl-tech/adtimabox/cp-mini-app/2023-campaign-form-mims-miniapp)
