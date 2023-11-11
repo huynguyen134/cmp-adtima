@@ -1,10 +1,20 @@
 
  
 # CMP (Consent Management Platform)
-NĐ 13 thực thi thì mới có cái này , chứ bình thường ai rãnh đâu mà làm ?
-# What does it do?
+CMP (Consent Management Platform) là một công cụ phần mềm giúp bạn thu thập và quản lý thông tin cá nhân và sự đồng ý của người dùng theo các luật và quy định về bảo vệ dữ liệu, như GDPR của EU, CCPA của California, hay LGPD của Brazil. CMP cho phép bạn hiển thị các thông báo hoặc hộp thoại yêu cầu sự đồng ý của người dùng trước khi thu thập, chia sẻ, hay bán dữ liệu người dùng từ các nguồn trực tuyến như website, ứng dụng, cookie, video nhúng, và các công nghệ theo dõi khác CMP cũng giúp bạn lưu trữ, quản lý, và cập nhật các thông tin về sự đồng ý của người dùng, và truyền dữ liệu đó cho các đối tác quảng cáo hay dịch vụ bên dưới.
 
-Tạo xài lại cho các project React khác
+Bạn cần CMP để tuân thủ các quy định về bảo vệ dữ liệu, đảm bảo quyền riêng tư, minh bạch, và kiểm soát cho người dùng, và tránh các rủi ro pháp lý hay tiềm năng bị phạt nặng. CMP cũng giúp bạn tăng cường niềm tin và sự gắn kết của người dùng, và cải thiện hiệu quả của chiến dịch quảng cáo mục tiêu
+
+OK CHƯA ?
+
+# Cái này dùng để làm gì vại ?
+
+•  Tạo consent chứa các thông tin cơ bản về người dùng, nguồn dữ liệu, mục đích sử dụng, và thời hạn của sự đồng ý 
+
+•  Tự kiểm tra tính hợp lệ, đầy đủ, và cập nhật của các đối tượng consent
+
+•  Gửi đối tượng consent đã khởi tạo đến một hệ thống quản lý consent, để lưu trữ, chia sẻ, và cập nhật các thông tin về sự đồng ý của người dùng .
+
 
 # How do I use it?
 
