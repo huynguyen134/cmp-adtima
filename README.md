@@ -79,7 +79,7 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 
 ## Style
 Để style lại checkbox theo từng project . Copy những phần này vào root variables
-
+ - **Cách 1**
 ```js
 /* cmp checkbox appearance */
 --cmp-checkbox-height: 16px; /* checkbox height */
@@ -93,6 +93,8 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 --cmp-icon-checkbox-checked-color: yellow; /* checkbox icon check color */
 --cmp-error-message-color: red; /* error message color */
 ```
+ - **Cách 2**
+	Sử dụng props **``classes``** để overwrite lại css
 
 ## Ví dụ ?
  [MIMS-Miniapp](https://gitlab.zsl.zalo.services/zsl-tech/adtimabox/cp-mini-app/2023-campaign-form-mims-miniapp)
