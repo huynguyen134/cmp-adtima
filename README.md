@@ -68,6 +68,7 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 | **getMapingKey***      | -|   *`string`* | Dùng để bỏ vào **`cmp_key`*** khi submit form có thể submit form khi key được trả về 
 | **variablesObj***|   -   |    *`object`* | Dùng để render phần nội dung của checkbox và error message của checkbox đó <br/> **`Object key`**: lấy consent_name trong terms để làm key ví dụ: *`Đủ 18 tuổi`* <br/> **`errorMessage:`** hiển thị error message của consent  tương ứng <br/> **`labelText`**: hiển thị label text của checkbox tương ứng
 | **isFormValid***|   false|    *`boolean`* | Giá trị cần phải có để **`CMP`** kiểm tra để **`callApiConsents`** được thực thi
+| **ref***|   -|    - | Components sử dụng [**\[`Forwarding Refs`**\]](https://legacy.reactjs.org/docs/forwarding-refs.html) để kiêm tra tính hợp lệ và gọi API consents bao gồm 2 function **`callApiConsents`** và **`checkCMPValid`** <br/>Ví dụ: **`cmpRef.current.callApiConsents();`** để gọi api tạo consents
 | **isCmpValidProps**|   false|    *`boolean`* | Giá trị **`true`** khi tất cả các checkbox được check và **`false`** khi chưa check đủ validate sẽ thực thi trong này , dùng để validate bên ngoài form
 | **getInitTerms**|   -|    *`function`* | Trả về object init terms 
 | **handleOnChangeCheckbox** |   -   |    *`object`* | Được gọi khi mỗi lần onChange checkbox
