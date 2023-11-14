@@ -7,13 +7,12 @@ import DOMPurify from 'dompurify';
 
 
 const CMP = forwardRef((props, ref) => {
-	const { op, isSubmit, getMapingKey, handleOnChangeCheckbox, errorMessage, submitCount, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, isPostConsentsDone = false, hideCheckAll = false } = props;
+	const { op, getMapingKey, handleOnChangeCheckbox,  classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, hideCheckAll = false } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
 	const [termName, setTermName] = useState([]);
 	const [cmpKey, setCmpKey] = useState('');
-	const [count, setCount] = useState(false);
 
 	const isAllSelected = termName.length > 0 && selectedCMP.length === termName.length;
 
@@ -33,11 +32,11 @@ const CMP = forwardRef((props, ref) => {
 		op.platform = getOS() || '';
 		op.browser = getBrowser() || '';
 		const termResponse = await getTerms(op);
-		if (termResponse?.data_obs) {
+		if (termResponse) {
 			setCmpKey(termResponse?.data_obs);
 			// op['mapping_key'] = termResponse?.data_obs;
 			//send cmp key to props
-			// getInitTerms && getInitTerms(termResponse)
+			getInitTerms && getInitTerms(termResponse)
 			// getMapingKey && getMapingKey(termResponse?.data_obs)
 		}
 
@@ -108,12 +107,13 @@ const CMP = forwardRef((props, ref) => {
 
 
 	const hadleClickLinkChild = (event, val) => {
-		if (event.target.tagName === 'A') {
-			event.stopPropagation();
-			event.preventDefault();
-			handleLinkClick(val);
+		event.stopPropagation();
+		event.preventDefault();
+		if(handleLinkClick) {
+			if(event.target.tagName === 'A') {
+				handleLinkClick(val);
+			}
 		}
-
 	}
 
 
@@ -134,7 +134,8 @@ const CMP = forwardRef((props, ref) => {
 
 	useImperativeHandle(ref, () => ({
 		callApiConsents,
-		checkCMPValid
+		checkCMPValid,
+	
 	}))
 
 
@@ -181,7 +182,6 @@ const CMP = forwardRef((props, ref) => {
 								/>
 								<CustomCheckboxLabel htmlFor={`checkbox_${valueTerm._id}`} className="cmp-adtima-label-wrap">
 									<div onClick={(event) => hadleClickLinkChild(event, valueTerm)} className="cmp-adtima-label" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(variablesObj?.[valueTerm?.name].labelText) }}></div>
-									{variablesObj?.[valueTerm?.name].link?.length && <a onClick={(event) => hadleClickLinkChild(event, valueTerm)} >{variablesObj?.[valueTerm?.name].labelText}</a>}
 								</CustomCheckboxLabel>
 							</CmpChild>
 							{/* {!checkProperty?.[valueTerm?._id].property_value && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>} */}
