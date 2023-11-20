@@ -54,20 +54,31 @@ const CMP = forwardRef((props, ref) => {
 	};
 
 	const checkCMPValid = () => {
-		// handleSetErrorMessage();
-		Object.values(checkProperty).map((ele) => {
-			setCheckProperty(prev => {
-				return ({
-					...prev,
-					[ele.property_id]: {
-						...prev[ele.property_id],
-						error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
-					}
-				})
-			}
-			)
-		})
-		return Object.values(checkProperty).every(value => value.property_value)
+		try {
+	
+			// handleSetErrorMessage();
+			Object.values(checkProperty).map((ele) => {
+				setCheckProperty(prev => {
+					return ({
+						...prev,
+						[ele.property_id]: {
+							...prev[ele.property_id],
+							error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
+						}
+					})
+				}
+				)
+			})
+			let checkPropertyCheck =  Object.values(checkProperty).every(value => value.property_value);
+			if(!isFormValid) throw 'FORM IS NOT VALID'
+			if(!checkPropertyCheck) throw 'CMP IS NOT VALID'
+			return checkPropertyCheck
+
+		} catch(error) {
+			console.log('error', error)
+			return null;
+		}
+		
 
 	}
 
@@ -117,12 +128,17 @@ const CMP = forwardRef((props, ref) => {
 
 
 	const callApiConsents = async () => {
-		let isCmpValid = checkCMPValid();
-
-		if (!isFormValid || !isCmpValid) return 'FORM OR CMP IS NOT VALID';
-		op.cmp_properties = checkProp2cmpProp(checkProperty);
-		op.mapping_key = cmpKey;
-		return await postConsents(op);
+		try {
+			let isCmpValid = checkCMPValid();
+			if (!isFormValid || !isCmpValid) throw 'FORM OR CMP IS NOT VALID';
+			op.cmp_properties = checkProp2cmpProp(checkProperty);
+			op.mapping_key = cmpKey;
+			return await postConsents(op);	
+		}  catch(error) {
+			console.log(error);
+			return null;
+		}
+	
 	}
 
 	useImperativeHandle(ref, () => ({
