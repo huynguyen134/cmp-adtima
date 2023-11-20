@@ -7,7 +7,7 @@ import DOMPurify from 'dompurify';
 
 
 const CMP = forwardRef((props, ref) => {
-	const { op, getMapingKey, handleOnChangeCheckbox, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, hideCheckAll = false } = props;
+	const { op, handleOnChangeCheckbox, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, hideCheckAll = false } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
@@ -37,7 +37,6 @@ const CMP = forwardRef((props, ref) => {
 			// op['mapping_key'] = termResponse?.data_obs;
 			//send cmp key to props
 			getInitTerms && getInitTerms(termResponse)
-			// getMapingKey && getMapingKey(termResponse?.data_obs)
 		}
 
 		if (termResponse?.term?.record?.length) {
@@ -118,18 +117,12 @@ const CMP = forwardRef((props, ref) => {
 
 
 	const callApiConsents = async () => {
-
 		let isCmpValid = checkCMPValid();
 
-		if (!isFormValid || !isCmpValid) return;
+		if (!isFormValid || !isCmpValid) return 'FORM OR CMP IS NOT VALID';
 		op.cmp_properties = checkProp2cmpProp(checkProperty);
 		op.mapping_key = cmpKey;
-
-		const statusPostConsents = await postConsents(op);
-		if (statusPostConsents) {
-			getMapingKey(cmpKey) // Gửi mapping key ra ngoài , có mapping key là có tiền
-		}
-
+		return await postConsents(op);
 	}
 
 	useImperativeHandle(ref, () => ({
