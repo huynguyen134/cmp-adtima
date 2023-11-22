@@ -55,7 +55,7 @@ const CMP = forwardRef((props, ref) => {
 
 	const checkCMPValid = () => {
 		try {
-	
+
 			// handleSetErrorMessage();
 			Object.values(checkProperty).map((ele) => {
 				setCheckProperty(prev => {
@@ -69,16 +69,16 @@ const CMP = forwardRef((props, ref) => {
 				}
 				)
 			})
-			let checkPropertyCheck =  Object.values(checkProperty).every(value => value.property_value);
-			if(!isFormValid) throw 'FORM IS NOT VALID'
-			if(!checkPropertyCheck) throw 'CMP IS NOT VALID'
+			let checkPropertyCheck = Object.values(checkProperty).every(value => value.property_value);
+			if (!isFormValid) throw 'FORM IS NOT VALID'
+			if (!checkPropertyCheck) throw 'CMP IS NOT VALID'
 			return checkPropertyCheck
 
-		} catch(error) {
+		} catch (error) {
 			console.log('error', error)
 			return null;
 		}
-		
+
 
 	}
 
@@ -133,12 +133,14 @@ const CMP = forwardRef((props, ref) => {
 			if (!isFormValid || !isCmpValid) throw 'FORM OR CMP IS NOT VALID';
 			op.cmp_properties = checkProp2cmpProp(checkProperty);
 			op.mapping_key = cmpKey;
-			return await postConsents(op);	
-		}  catch(error) {
+			const postConsentRespone = await postConsents(op);
+			console.log('postConsentRespone', postConsentRespone)
+			return postConsentRespone;
+		} catch (error) {
 			console.log(error);
-			return null;
+			return error;
 		}
-	
+
 	}
 
 	useImperativeHandle(ref, () => ({
