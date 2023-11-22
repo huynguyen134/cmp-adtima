@@ -55,7 +55,6 @@ const CMP = forwardRef((props, ref) => {
 
 	const checkCMPValid = () => {
 		try {
-
 			// handleSetErrorMessage();
 			Object.values(checkProperty).map((ele) => {
 				setCheckProperty(prev => {
@@ -134,7 +133,7 @@ const CMP = forwardRef((props, ref) => {
 			op.cmp_properties = checkProp2cmpProp(checkProperty);
 			op.mapping_key = cmpKey;
 			const postConsentRespone = await postConsents(op);
-			console.log('postConsentRespone', postConsentRespone)
+			if (!postConsentRespone) throw 'Error: Cant send consents';
 			return postConsentRespone;
 		} catch (error) {
 			console.log(error);
