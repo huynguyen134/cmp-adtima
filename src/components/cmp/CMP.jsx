@@ -126,14 +126,14 @@ const CMP = forwardRef((props, ref) => {
 	}
 
 
-	const callApiConsents = async ({ userInfor = "0" }) => {
+	const callApiConsents = async ({ userInfor }) => {
 		try {
 
 			let isCmpValid = checkCMPValid();
 			if (!isFormValid || !isCmpValid) throw 'FORM OR CMP IS NOT VALID';
 			op.cmp_properties = checkProp2cmpProp(checkProperty);
 			op.mapping_key = cmpKey;
-			op.extend_uid = userInfor;
+			op.extend_uid = userInfor ? userInfor : "0";
 			console.log('userInfor cmp', userInfor)
 			console.log('op cmp', op)
 			const postConsentRespone = await postConsents(op);
