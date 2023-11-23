@@ -102,8 +102,6 @@ export async function postConsents(op) {
 			last_platform: op.platform || 'Windows',
 			last_browser: op.browser || 'Chrome',
 		};
-		console.log('cmp params', params);
-
 		const terms = await fetch(baseURI + '/cmp-consents', {
 			headers: {
 				Accept: 'application/json',
@@ -113,7 +111,6 @@ export async function postConsents(op) {
 			body: JSON.stringify(params),
 		})
 			.then((res) => {
-				console.log('res1', res);
 				if (res.status === 200) return res.json();
 			})
 			.then((res) => {

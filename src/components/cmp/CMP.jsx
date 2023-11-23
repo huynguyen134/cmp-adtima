@@ -134,7 +134,6 @@ const CMP = forwardRef((props, ref) => {
 			op.cmp_properties = checkProp2cmpProp(checkProperty);
 			op.mapping_key = cmpKey;
 			op.extend_uid = extend_uid;
-			console.log('op cmp', op)
 			const postConsentRespone = await postConsents(op);
 			if (!postConsentRespone) throw 'Error: Cant send consents';
 			return postConsentRespone;
