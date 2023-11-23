@@ -126,15 +126,14 @@ const CMP = forwardRef((props, ref) => {
 	}
 
 
-	const callApiConsents = async ({ userInfor }) => {
+	const callApiConsents = async (userInforId = 0) => {
 		try {
-
 			let isCmpValid = checkCMPValid();
 			if (!isFormValid || !isCmpValid) throw 'FORM OR CMP IS NOT VALID';
 			op.cmp_properties = checkProp2cmpProp(checkProperty);
 			op.mapping_key = cmpKey;
-			op.extend_uid = userInfor ? userInfor : "0";
-			console.log('userInfor cmp', userInfor)
+			op.extend_uid = userInforId.toString();
+			console.log('userInfor cmp', userInforId)
 			console.log('op cmp', op)
 			const postConsentRespone = await postConsents(op);
 			if (!postConsentRespone) throw 'Error: Cant send consents';
@@ -148,7 +147,6 @@ const CMP = forwardRef((props, ref) => {
 	useImperativeHandle(ref, () => ({
 		callApiConsents,
 		checkCMPValid,
-
 	}))
 
 
