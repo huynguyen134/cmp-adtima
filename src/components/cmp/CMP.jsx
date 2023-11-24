@@ -179,7 +179,7 @@ const CMP = forwardRef((props, ref) => {
 
 
 	useEffect(() => {
-		// fetchData();
+		fetchData();
 
 		// returned function will be called on component unmount 
 	}, []);
