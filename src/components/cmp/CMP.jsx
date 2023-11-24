@@ -29,7 +29,7 @@ const CMP = forwardRef((props, ref) => {
 
 
 	const callApiGetTerms = async (userInforId = 0) => {
-		console.log('userId get term', 0);
+		console.log('userId get term', userInforId);
 		op.platform = getOS() || '';
 		op.browser = getBrowser() || '';
 		op.extend_uid = userInforId.toString();
