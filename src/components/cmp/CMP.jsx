@@ -28,6 +28,33 @@ const CMP = forwardRef((props, ref) => {
 	};
 
 
+	const callApiGetTerms = async (userInforId = 0) => {
+		console.log('userId get term', 0);
+		op.platform = getOS() || '';
+		op.browser = getBrowser() || '';
+		op.extend_uid = userInforId.toString();
+		const termResponse = await getTerms(op);
+		if (termResponse) {
+			setCmpKey(termResponse?.data_obs);
+			// op['mapping_key'] = termResponse?.data_obs;
+			//send cmp key to props
+			getInitTerms && getInitTerms(termResponse)
+		}
+
+		if (termResponse?.term?.record?.length) {
+			const tempRecord = termResponse?.term?.record[0];
+			setTerm(tempRecord);
+			handelGetTermName(tempRecord);
+			// Create TERM_CHECK_PROPERTY
+			// Update value when onChange Term
+			// Push to op and push to /cmp-consents in postConsents
+			const TERM_CHECK_PROPERTY = termProp2checkProp(tempRecord?.term_properties);
+			// Set init for checkProperty state
+			setCheckProperty(TERM_CHECK_PROPERTY);
+
+		}
+	};
+
 	const fetchData = async () => {
 		op.platform = getOS() || '';
 		op.browser = getBrowser() || '';
@@ -125,7 +152,6 @@ const CMP = forwardRef((props, ref) => {
 		}
 	}
 
-
 	const callApiConsents = async (userInforId = 0) => {
 		try {
 			let isCmpValid = checkCMPValid();
@@ -147,12 +173,13 @@ const CMP = forwardRef((props, ref) => {
 	useImperativeHandle(ref, () => ({
 		callApiConsents,
 		checkCMPValid,
+		callApiGetTerms
 	}))
 
 
 
 	useEffect(() => {
-		fetchData();
+		// fetchData();
 
 		// returned function will be called on component unmount 
 	}, []);
