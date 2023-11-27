@@ -52,7 +52,6 @@ Cần kiểm tra user id trước để render ra vì extend_uid trước khi g�
             extend_app_name: "Signify",
             extend_uid: userInfor?._id || '0'
         }}
-        getMapingKey={handleCallApiForm}
         isFormValid={formState.isValid} 
         variablesObj={{
             "Đủ 18 tuổi": {
@@ -88,7 +87,6 @@ Nếu không truyền thì mặc định extend_uid sẽ bằng '0'
         extend_app_name: "Signify",
         extend_uid: '0'
     }}
-    getMapingKey={handleCallApiForm}
     isFormValid={formState.isValid} 
     variablesObj={{
         "Đủ 18 tuổi": {
@@ -108,6 +106,10 @@ Gọi api thành công sẽ trả về mapping_key, dùng mapping_key đó updat
 ```js
 const postConsentsRespone = await cmpRef.current.callApiConsents();
 ```
+
+**Lưu ý:**
+  - Gọi **`cmpRef.current.checkCMPValid();`** khi submit Form check validate cho phần CMP
+  - API chỉ được gọi khi **`Form`** và **`CMP`** đều valid 
 
 ## Props
 Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are also available.
