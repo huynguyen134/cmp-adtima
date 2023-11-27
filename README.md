@@ -1,4 +1,9 @@
 
+# Project Title
+
+A brief description of what this project does and who it's for
+
+
 
  
 # CMP (Consent Management Platform)
@@ -8,7 +13,7 @@ Bạn cần CMP để tuân thủ các quy định về bảo vệ dữ liệu, 
 
 OK CHƯA ?
 
-# Cái này dùng để làm gì vại ?
+# Cái này dùng để làm gì ?
 
 •  Tạo consent chứa các thông tin cơ bản về người dùng, nguồn dữ liệu, mục đích sử dụng, và thời hạn của sự đồng ý 
 
@@ -33,30 +38,75 @@ import { CMP } from  'cmp-adtima';
 
  **Use**
 
+**Cách 1: Truyền extend_uid với user id (recommended)**
+
+Cần kiểm tra user id trước để render ra vì extend_uid trước khi gửi và sau khi gửi phải giống nhau nếu không sẽ báo lỗi khi gọi API tạo consents
+
+```js
+{userInfor?._id &&
+    <CMP
+        op={{
+            organization_id: "655c69b20b8952907f45bb01",
+            term_id: "655c6ad10b8952907f45bbab",
+            extend_app_id: import.meta.env.VITE_CAMPAIGN_ID,
+            extend_app_name: "Signify",
+            extend_uid: userInfor?._id || '0'
+        }}
+        getMapingKey={handleCallApiForm}
+        isFormValid={formState.isValid} 
+        variablesObj={{
+            "Đủ 18 tuổi": {
+                errorMessage: 'Vui Lòng đồng ý nếu bạn trên 18', 
+                labelText: `<div>Tui đã trên 18 tuổi</div>`,
+            },
+            "Chính sách thỏa thuận sử dụng dịch vụ": {
+                errorMessage: 'Vui Lòng đồng ý dịch vụ',
+                labelText: `<div>Đồng ý điều <a href="https://adtima.vn/thoa-thuan-su-dung-dich-vu" target="_blank" class="test">khoản</a> haha<div>`,
+            }
+        }}
+        handleLinkClick={handleLinkClick}
+        ref={cmpRef}
+    />
+}
+```
+Gọi api thành công sẽ trả về mapping_key, dùng mapping_key đó update lại thông tin người dùng ( phần này không cần cũng được nhưng để tường minh thì nên làm)
+```js
+const postConsentsRespone = await cmpRef.current.callApiConsents(userInfor?._id);
+VD: cmp_key = postConsentsRespone.mapping_key
+```
+
+**Cách 2: Không Truyền extend_uid**
+
+Nếu không truyền thì mặc định extend_uid sẽ bằng '0'
+
 ```js
 <CMP
-	op={{
-		organization_id: 'xxxxxxxxxx', // phải có
-		term_id: 'xxxxxx',  // phải có
-		extend_app_id: 'your CAMPAIGN_ID', // không có thì để trống
-		extend_app_name: 'your project name', // Tên dự án
-		extend_uid: 'your user id', // không có thì để trống
-	}}
-	getMapingKey={handleCallApiForm}
-	isFormValid={formState.isValid} 
-	variablesObj={{
-		"Đủ 18 tuổi": {
-			errorMessage: 'Vui Lòng đồng ý nếu bạn trên 18', 
-			labelText: `<div>Tui đã trên 18 tuổi</div>`,
-		},
-		"Chính sách thỏa thuận sử dụng dịch vụ": {
-			errorMessage: 'Vui Lòng đồng ý dịch vụ',
-			labelText: `<div>Đồng ý điều <a href="https://adtima.vn/thoa-thuan-su-dung-dich-vu" target="_blank" class="test">khoản</a> haha<div>`,
-		}
-	}}
-	handleLinkClick={handleLinkClick}
-	ref={cmpRef}
+    op={{
+        organization_id: "655c69b20b8952907f45bb01",
+        term_id: "655c6ad10b8952907f45bbab",
+        extend_app_id: import.meta.env.VITE_CAMPAIGN_ID,
+        extend_app_name: "Signify",
+        extend_uid: '0'
+    }}
+    getMapingKey={handleCallApiForm}
+    isFormValid={formState.isValid} 
+    variablesObj={{
+        "Đủ 18 tuổi": {
+            errorMessage: 'Vui Lòng đồng ý nếu bạn trên 18', 
+            labelText: `<div>Tui đã trên 18 tuổi</div>`,
+        },
+        "Chính sách thỏa thuận sử dụng dịch vụ": {
+            errorMessage: 'Vui Lòng đồng ý dịch vụ',
+            labelText: `<div>Đồng ý điều <a href="https://adtima.vn/thoa-thuan-su-dung-dich-vu" target="_blank" class="test">khoản</a> haha<div>`,
+        }
+    }}
+    handleLinkClick={handleLinkClick}
+    ref={cmpRef}
 />
+```
+Gọi api thành công sẽ trả về mapping_key, dùng mapping_key đó update lại thông tin người dùng ( phần này không cần cũng được nhưng để tường minh thì nên làm)
+```js
+const postConsentsRespone = await cmpRef.current.callApiConsents();
 ```
 
 ## Props
@@ -65,7 +115,6 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
 | Name| Default value| Type| Description
 | ------------- |:-------------:| -----| :-----|
 | **op***      | -| *`object`* | **op** là object dùng để khởi tạo term ban đầu thông qua *`'/digital-api/'`* bao gồm những field cần và đủ như  <br/> **`organization_id`**: "*your id here*" <br/> **`term_id`**: "*your term id here*"	<br/> **`extend_app_id`**: "*your CAMPAIGN_ID*"	<br/> **`extend_app_name`**: "*your project name*"	<br/> **`extend_uid`**: "*your user id*"
-| **getMapingKey***      | -|   *`string`* | Dùng để bỏ vào **`cmp_key`*** khi submit form có thể submit form khi key được trả về 
 | **variablesObj***|   -   |    *`object`* | Dùng để render phần nội dung của checkbox và error message của checkbox đó <br/> **`Object key`**: lấy consent_name trong terms để làm key ví dụ: *`Đủ 18 tuổi`* <br/> **`errorMessage:`** hiển thị error message của consent  tương ứng <br/> **`labelText`**: hiển thị label text của checkbox tương ứng
 | **isFormValid***|   false|    *`boolean`* | Giá trị cần phải có để **`CMP`** kiểm tra để **`callApiConsents`** được thực thi
 | **ref***|   -|    - | Components sử dụng [**\[`Forwarding Refs`**\]](https://legacy.reactjs.org/docs/forwarding-refs.html) để kiêm tra tính hợp lệ và gọi API consents bao gồm 2 function **`callApiConsents`** và **`checkCMPValid`** <br/>Ví dụ: **`cmpRef.current.callApiConsents();`** để gọi api tạo consents
@@ -96,5 +145,40 @@ Props of the [CMP](https://github.com/huynguyen134/cmp-adtima) component are als
  - **Cách 2**
 	Sử dụng props **``classes``** để overwrite lại css
 
+```js
+.cmp-custom {
+  font-size: 16px;
+
+  .cmp-adtima-link {
+    color: var(--primary, #f81a22);
+    font-weight: 500;
+  }
+
+  .cmp-adtima-error-message {
+    font-size: var(--step--2);
+    line-height: 18px;
+  }
+
+  input[type="checkbox"] {
+    &:checked {
+      &::before {
+        content: "";
+        border: none;
+        background: url("@/assets/images/icon_checkbox.svg") no-repeat center center;
+        background-size: 10px;
+        width: 100%;
+        height: 100%;
+        inset: 0;
+        margin: 0;
+        transform: unset;
+      }
+    }
+  }
+}
+
+```
+
 ## Ví dụ ?
- [MIMS-Miniapp](https://gitlab.zsl.zalo.services/zsl-tech/adtimabox/cp-mini-app/2023-campaign-form-mims-miniapp)
+ MIMS-Miniapp 
+ 
+ SIGNIFY-Miniapp
