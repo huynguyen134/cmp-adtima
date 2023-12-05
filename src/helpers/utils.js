@@ -89,38 +89,42 @@ export async function getTerms(op) {
 }
 
 export async function postConsents(op) {
-	if (op.mode === 'simulate') return true;
-	const params = {
-		organization_id: op.organization_id,
-		mapping_key: op.mapping_key,
-		extend_app_id: op.extend_app_id,
-		extend_app_name: op.extend_app_name,
-		extend_uid: op.extend_uid,
-		term_id: op.term_id,
-		property_last_data: op.cmp_properties,
-		last_platform: op.platform || 'Windows',
-		last_browser: op.browser || 'Chrome',
-	};
-
-	const terms = await fetch(baseURI + '/cmp-consents', {
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-		},
-		method: 'POST',
-		body: JSON.stringify(params),
-	})
-		.then((res) => {
-			if (res.status === 200) return res.json();
+	try {
+		if (op.mode === 'simulate') return true;
+		const params = {
+			organization_id: op.organization_id,
+			mapping_key: op.mapping_key,
+			extend_app_id: op.extend_app_id,
+			extend_app_name: op.extend_app_name,
+			extend_uid: op.extend_uid,
+			term_id: op.term_id,
+			property_last_data: op.cmp_properties,
+			last_platform: op.platform || 'Windows',
+			last_browser: op.browser || 'Chrome',
+		};
+		const terms = await fetch(baseURI + '/cmp-consents', {
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			method: 'POST',
+			body: JSON.stringify(params),
 		})
-		.then((res) => {
-			if (res.statusCode == 200) {
-				return res.data;
-			}
-		});
-
-	return terms;
-};
+			.then((res) => {
+				if (res.status === 200) return res.json();
+			})
+			.then((res) => {
+				console.log('res2', res);
+				if (res.statusCode == 200) {
+					return res.data;
+				}
+			});
+		return terms;
+	} catch (error) {
+		console.log('error cmp', error)
+		return null
+	}
+}
 
 
 export const CMP_FORM_VALIDATES = {
@@ -151,10 +155,10 @@ export function checkProp2cmpProp(checkProperty) {
 		const tmp = checkProperty[property];
 		delete tmp['error_message']; // this will remove the error_message field from tmp
 		const copy_tmp = {
-			
+
 			...tmp,
 			property_value: tmp['property_value'] ? 1 : 0,
-			
+
 		};
 		cmpProperties.push(copy_tmp);
 	}

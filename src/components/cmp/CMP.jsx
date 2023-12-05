@@ -28,6 +28,33 @@ const CMP = forwardRef((props, ref) => {
 	};
 
 
+	const callApiGetTerms = async (userInforId = 0) => {
+		console.log('userId get term', userInforId);
+		op.platform = getOS() || '';
+		op.browser = getBrowser() || '';
+		op.extend_uid = userInforId.toString();
+		const termResponse = await getTerms(op);
+		if (termResponse) {
+			setCmpKey(termResponse?.data_obs);
+			// op['mapping_key'] = termResponse?.data_obs;
+			//send cmp key to props
+			getInitTerms && getInitTerms(termResponse)
+		}
+
+		if (termResponse?.term?.record?.length) {
+			const tempRecord = termResponse?.term?.record[0];
+			setTerm(tempRecord);
+			handelGetTermName(tempRecord);
+			// Create TERM_CHECK_PROPERTY
+			// Update value when onChange Term
+			// Push to op and push to /cmp-consents in postConsents
+			const TERM_CHECK_PROPERTY = termProp2checkProp(tempRecord?.term_properties);
+			// Set init for checkProperty state
+			setCheckProperty(TERM_CHECK_PROPERTY);
+
+		}
+	};
+
 	const fetchData = async () => {
 		op.platform = getOS() || '';
 		op.browser = getBrowser() || '';
@@ -54,32 +81,23 @@ const CMP = forwardRef((props, ref) => {
 	};
 
 	const checkCMPValid = () => {
-		try {
-	
-			// handleSetErrorMessage();
-			Object.values(checkProperty).map((ele) => {
-				setCheckProperty(prev => {
-					return ({
-						...prev,
-						[ele.property_id]: {
-							...prev[ele.property_id],
-							error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
-						}
-					})
-				}
-				)
-			})
-			let checkPropertyCheck =  Object.values(checkProperty).every(value => value.property_value);
-			if(!isFormValid) throw 'FORM IS NOT VALID'
-			if(!checkPropertyCheck) throw 'CMP IS NOT VALID'
-			return checkPropertyCheck
-
-		} catch(error) {
-			console.log('error', error)
-			return null;
-		}
-		
-
+		// handleSetErrorMessage();
+		Object.values(checkProperty).map((ele) => {
+			setCheckProperty(prev => {
+				return ({
+					...prev,
+					[ele.property_id]: {
+						...prev[ele.property_id],
+						error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
+					}
+				})
+			}
+			)
+		})
+		let checkPropertyCheck = Object.values(checkProperty).every(value => value.property_value);
+		if (!isFormValid) throw 'FORM IS NOT VALID'
+		if (!checkPropertyCheck) throw 'CMP IS NOT VALID'
+		return checkPropertyCheck
 	}
 
 	const handleChange = (event, checkboxId) => {
@@ -102,10 +120,8 @@ const CMP = forwardRef((props, ref) => {
 			isCmpValidProps && isCmpValidProps(checkCMPValid())
 			return;
 		}
-		// setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
 
 		// added below code to update selected options
-
 		const list = [...selectedCMP];
 		const index = list.indexOf(value);
 		index === -1 ? list.push(value) : list.splice(index, 1);
@@ -126,25 +142,28 @@ const CMP = forwardRef((props, ref) => {
 		}
 	}
 
-
-	const callApiConsents = async () => {
+	const callApiConsents = async (userInforId = 0) => {
 		try {
 			let isCmpValid = checkCMPValid();
 			if (!isFormValid || !isCmpValid) throw 'FORM OR CMP IS NOT VALID';
 			op.cmp_properties = checkProp2cmpProp(checkProperty);
 			op.mapping_key = cmpKey;
-			return await postConsents(op);	
-		}  catch(error) {
+			op.extend_uid = userInforId.toString();
+			console.log('userInfor cmp', userInforId)
+			console.log('op cmp', op)
+			const postConsentRespone = await postConsents(op);
+			if (!postConsentRespone) throw postConsentRespone;
+			return postConsentRespone;
+		} catch (error) {
 			console.log(error);
-			return null;
+			return error;
 		}
-	
 	}
 
 	useImperativeHandle(ref, () => ({
 		callApiConsents,
 		checkCMPValid,
-
+		callApiGetTerms
 	}))
 
 
