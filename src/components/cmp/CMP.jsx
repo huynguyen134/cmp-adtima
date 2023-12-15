@@ -7,12 +7,13 @@ import DOMPurify from 'dompurify';
 
 
 const CMP = forwardRef((props, ref) => {
-	const { op, handleOnChangeCheckbox, classes, isCmpValidProps, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, hideCheckAll = false } = props;
+	const { op, handleOnChangeCheckbox, classes, variablesObj, handleLinkClick, isFormValid = false, getInitTerms, hideCheckAll = false } = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
 	const [selectedCMP, setSelectedCMP] = useState([]);
 	const [termName, setTermName] = useState([]);
 	const [cmpKey, setCmpKey] = useState('');
+	const [showErrors, setShowError] = useState('');
 
 	const isAllSelected = termName.length > 0 && selectedCMP.length === termName.length;
 
@@ -29,7 +30,6 @@ const CMP = forwardRef((props, ref) => {
 
 
 	const callApiGetTerms = async (userInforId = 0) => {
-		console.log('userId get term', userInforId);
 		op.platform = getOS() || '';
 		op.browser = getBrowser() || '';
 		op.extend_uid = userInforId.toString();
@@ -81,66 +81,48 @@ const CMP = forwardRef((props, ref) => {
 	};
 
 	const checkCMPValid = () => {
-		try {
-			// handleSetErrorMessage();
-			Object.values(checkProperty).map((ele) => {
-				setCheckProperty(prev => {
-					return ({
-						...prev,
-						[ele.property_id]: {
-							...prev[ele.property_id],
-							error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
-						}
-					})
-				}
-				)
+		Object.values(checkProperty).map((ele) => {
+			setCheckProperty(prev => {
+				return ({
+					...prev,
+					[ele.property_id]: {
+						...prev[ele.property_id],
+						error_message: prev[ele.property_id].property_value ? '' : variablesObj?.[ele.property_name].errorMessage
+					}
+				})
 			})
-			let checkPropertyCheck = Object.values(checkProperty).every(value => value.property_value);
-			if (!isFormValid) throw 'FORM IS NOT VALID'
-			if (!checkPropertyCheck) throw 'CMP IS NOT VALID'
-			return checkPropertyCheck
-
-		} catch (error) {
-			console.log('error', error)
-			return null;
-		}
-
-
+		})
+		let checkPropertyCheck = Object.values(checkProperty).every(value => value.property_value);
+		return checkPropertyCheck;
 	}
 
 	const handleChange = (event, checkboxId) => {
 		const { value, checked } = event.target;
-		// Update status property_value in TERM_CHECK_PROPERTY
-		if (checkboxId) checkProperty[checkboxId].property_value = checked;
+
+		if (checkboxId) {
+			checkProperty[checkboxId].property_value = checked;
+			checkProperty[checkboxId].error_message = checked ? '' : variablesObj?.[checkProperty[checkboxId].property_name].errorMessage;
+		};
 
 		handleOnChangeCheckbox && handleOnChangeCheckbox(checkProperty);
 
 		if (value === 'isAcceptByParent') {
 			setSelectedCMP(selectedCMP.length === termName.length ? [] : termName);
-			//  Update status property_value in TERM_CHECK_PROPERTY when check all
 			Object.keys(checkProperty).forEach((key) => {
+				console.log('key', checkProperty[key])
+				console.log('key.property_name', checkProperty[key.property_name])
 				checkProperty[key].property_value = checked ? true : false;
+				checkProperty[key].error_message = checked ? '' : variablesObj?.[checkProperty[key].property_name].errorMessage
 			});
 
 			handleOnChangeCheckbox && handleOnChangeCheckbox(checkProperty);
-
-			//Check if CMP form valid or not
-			isCmpValidProps && isCmpValidProps(checkCMPValid())
 			return;
 		}
-		// setError('isAcceptByParent', { message: 'Vui lòng đồng ý để sử dụng dịch vụ' });
-
-		// added below code to update selected options
-
 		const list = [...selectedCMP];
 		const index = list.indexOf(value);
 		index === -1 ? list.push(value) : list.splice(index, 1);
 		setSelectedCMP(list);
-
-		//Check if CMP form valid or not
-		isCmpValidProps && isCmpValidProps(checkCMPValid())
 	};
-
 
 	const hadleClickLinkChild = (event, val) => {
 		if (handleLinkClick) {
@@ -155,18 +137,18 @@ const CMP = forwardRef((props, ref) => {
 	const callApiConsents = async (userInforId = 0) => {
 		try {
 			let isCmpValid = checkCMPValid();
-			if (!isFormValid || !isCmpValid) throw 'FORM OR CMP IS NOT VALID';
+			if (!isFormValid || !isCmpValid) return;
 			op.cmp_properties = checkProp2cmpProp(checkProperty);
 			op.mapping_key = cmpKey;
 			op.extend_uid = userInforId.toString();
-			console.log('userInfor cmp', userInforId)
-			console.log('op cmp', op)
 			const postConsentRespone = await postConsents(op);
-			if (!postConsentRespone) throw 'Error: Cant send consents';
-			return postConsentRespone;
+			if (postConsentRespone?.statusCode === -103) throw postConsentRespone;
+			setShowError('');
+			return postConsentRespone?.data;
 		} catch (error) {
 			console.log(error);
-			return error;
+			setShowError(error?.message);
+			return null;
 		}
 	}
 
@@ -180,8 +162,9 @@ const CMP = forwardRef((props, ref) => {
 
 	useEffect(() => {
 		fetchData();
-
-		// returned function will be called on component unmount 
+		return () => {
+			fetchData();
+		}
 	}, []);
 
 
@@ -189,7 +172,6 @@ const CMP = forwardRef((props, ref) => {
 		<div ref={ref} className={classes}>
 			{!hideCheckAll && <CmpChild className="cmp-adtima-checkox-all">
 				<CustomCheckbox
-					// {...register('isAcceptByParent', { ...REGISTER_FORM_VALIDATES.isAcceptByParent })}
 					type="checkbox"
 					name="isAcceptByParent"
 					value='isAcceptByParent'
@@ -200,11 +182,8 @@ const CMP = forwardRef((props, ref) => {
 				/>
 				<CustomCheckboxLabel htmlFor="isAcceptByParent" className="cmp-adtima-label">{term?.name}</CustomCheckboxLabel>
 			</CmpChild>}
-
-
 			<CmpGroup className="cmp-adtima-group">
 				{term?.term_properties?.map((valueTerm, index) => {
-					// let nameCheckbox = getKeyFormByName(valueTerm?.name);
 					return (
 						<div key={`checkbox_${valueTerm._id}`} className="cmp-adtima-group-child">
 							<CmpChild className='cmp-adtima-child'>
@@ -213,7 +192,6 @@ const CMP = forwardRef((props, ref) => {
 									name={valueTerm?._id}
 									type="checkbox"
 									className="cmp-adtima-checkbox"
-									// {...register(nameCheckbox, { ...REGISTER_FORM_VALIDATES[nameCheckbox] })}
 									value={valueTerm?._id}
 									onChange={(e) => handleChange(e, valueTerm?._id)}
 									checked={selectedCMP.includes(valueTerm?._id)}
@@ -222,13 +200,13 @@ const CMP = forwardRef((props, ref) => {
 
 								</CustomCheckboxLabel>
 							</CmpChild>
-							{/* {!checkProperty?.[valueTerm?._id].property_value && <ErrorMessage id={`cmp-error-message-${index}`}>{checkProperty?.[valueTerm?._id].error_message}</ErrorMessage>} */}
 							{!checkProperty?.[valueTerm?._id]?.property_value && <ErrorMessage className="cmp-adtima-error-message">{checkProperty?.[valueTerm?._id]?.error_message}</ErrorMessage>}
 
 						</div>
 					)
 				})}
 			</CmpGroup>
+			{showErrors && <ErrorMessage className="cmp-adtima-error-message">{showErrors}</ErrorMessage>}
 		</div>
 	)
 })

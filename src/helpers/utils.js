@@ -114,10 +114,8 @@ export async function postConsents(op) {
 				if (res.status === 200) return res.json();
 			})
 			.then((res) => {
-				console.log('res2', res);
-				if (res.statusCode == 200) {
-					return res.data;
-				}
+				return res;
+
 			});
 		return terms;
 	} catch (error) {
