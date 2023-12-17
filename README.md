@@ -13,7 +13,7 @@ Bạn cần CMP để tuân thủ các quy định về bảo vệ dữ liệu, 
 
 OK CHƯA ?
 
-# Cái này dùng để làm gì ?
+# Mục đích
 
 •  Tạo consent chứa các thông tin cơ bản về người dùng, nguồn dữ liệu, mục đích sử dụng, và thời hạn của sự đồng ý 
 
@@ -21,7 +21,7 @@ OK CHƯA ?
 
 •  Gửi đối tượng consent đã khởi tạo đến một hệ thống quản lý consent, để lưu trữ, chia sẻ, và cập nhật các thông tin về sự đồng ý của người dùng .
 
-# How do I use it?
+# Cách sử dụng
 
 **Install**
 
@@ -49,7 +49,7 @@ Cần kiểm tra user id trước để render ra vì extend_uid trước khi g�
             organization_id: "655c69b20b8952907f45bb01",
             term_id: "655c6ad10b8952907f45bbab",
             extend_app_id: import.meta.env.VITE_CAMPAIGN_ID,
-            extend_app_name: "Signify",
+            extend_app_name: "Test CMP",
             extend_uid: userInfor?._id || '0'
         }}
         isFormValid={formState.isValid} 
@@ -84,7 +84,7 @@ Nếu không truyền thì mặc định extend_uid sẽ bằng '0'
         organization_id: "655c69b20b8952907f45bb01",
         term_id: "655c6ad10b8952907f45bbab",
         extend_app_id: import.meta.env.VITE_CAMPAIGN_ID,
-        extend_app_name: "Signify",
+        extend_app_name: "Test CMP",
         extend_uid: '0'
     }}
     isFormValid={formState.isValid} 
@@ -102,7 +102,7 @@ Nếu không truyền thì mặc định extend_uid sẽ bằng '0'
     ref={cmpRef}
 />
 ```
-Gọi api thành công sẽ trả về mapping_key, dùng mapping_key đó update lại thông tin người dùng ( phần này không cần cũng được nhưng để tường minh thì nên làm)
+Gọi api thành công (statusCode 200) sẽ trả về object data bao gồm mapping_key, dùng mapping_key đó update lại thông tin người dùng ( phần này không cần cũng được nhưng để tường minh thì nên làm)
 ```js
 const postConsentsRespone = await cmpRef.current.callApiConsents();
 ```

@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react'
 import { setCookie, checkProp2cmpProp, getBrowser, getOS, getTerms, postConsents, termProp2checkProp } from '../../helpers/utils';
-
-import { CmpChild, CmpGroup, CustomCheckbox, CustomCheckboxLabel, ErrorMessage } from './styles'
-import parse from 'html-react-parser';
+import { CmpChild, CmpGroup, CustomCheckbox, CustomCheckboxLabel, ErrorMessage } from './styles';
 import DOMPurify from 'dompurify';
 
 
@@ -27,7 +25,6 @@ const CMP = forwardRef((props, ref) => {
 			});
 		}
 	};
-
 
 	const callApiGetTerms = async (userInforId = 0) => {
 		op.platform = getOS() || '';
@@ -61,8 +58,7 @@ const CMP = forwardRef((props, ref) => {
 		const termResponse = await getTerms(op);
 		if (termResponse) {
 			setCmpKey(termResponse?.data_obs);
-			// op['mapping_key'] = termResponse?.data_obs;
-			//send cmp key to props
+			// Send cmp key to props
 			getInitTerms && getInitTerms(termResponse)
 		}
 
@@ -109,8 +105,6 @@ const CMP = forwardRef((props, ref) => {
 		if (value === 'isAcceptByParent') {
 			setSelectedCMP(selectedCMP.length === termName.length ? [] : termName);
 			Object.keys(checkProperty).forEach((key) => {
-				console.log('key', checkProperty[key])
-				console.log('key.property_name', checkProperty[key.property_name])
 				checkProperty[key].property_value = checked ? true : false;
 				checkProperty[key].error_message = checked ? '' : variablesObj?.[checkProperty[key].property_name].errorMessage
 			});
@@ -136,19 +130,17 @@ const CMP = forwardRef((props, ref) => {
 
 	const callApiConsents = async (userInforId = 0) => {
 		try {
-			let isCmpValid = checkCMPValid();
+			const isCmpValid = checkCMPValid();
 			if (!isFormValid || !isCmpValid) return;
 			op.cmp_properties = checkProp2cmpProp(checkProperty);
 			op.mapping_key = cmpKey;
 			op.extend_uid = userInforId.toString();
 			const postConsentRespone = await postConsents(op);
-			if (postConsentRespone?.statusCode === -103) throw postConsentRespone;
+			if (postConsentRespone?.statusCode !== 200) throw postConsentRespone;
 			setShowError('');
 			return postConsentRespone?.data;
 		} catch (error) {
-			console.log(error);
-			setShowError(error?.message);
-			return null;
+			setShowError(error?.statusCode + " " + error?.message);
 		}
 	}
 
@@ -157,7 +149,6 @@ const CMP = forwardRef((props, ref) => {
 		checkCMPValid,
 		callApiGetTerms
 	}))
-
 
 
 	useEffect(() => {
