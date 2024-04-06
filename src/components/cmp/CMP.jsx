@@ -13,6 +13,8 @@ import {
 	getTerms,
 	postConsents,
 	termProp2checkProp,
+	termProp2checkPropChecked,
+	getTermId,
 } from '../../helpers/utils';
 import {
 	CmpChild,
@@ -30,9 +32,9 @@ const CMP = forwardRef((props, ref) => {
 		classes,
 		variablesObj,
 		handleLinkClick,
-		isFormValid = false,
 		getInitTerms,
 		hideCheckAll = false,
+		defaultChecked = false,
 	} = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
@@ -40,6 +42,10 @@ const CMP = forwardRef((props, ref) => {
 	const [termName, setTermName] = useState([]);
 	const [cmpKey, setCmpKey] = useState('');
 	const [showErrors, setShowError] = useState('');
+
+	console.log('selectedCMP', selectedCMP);
+	console.log('defaultChecked', defaultChecked);
+	console.log('checkProperty', checkProperty);
 
 	const isAllSelected =
 		termName.length > 0 && selectedCMP.length === termName.length;
@@ -102,8 +108,16 @@ const CMP = forwardRef((props, ref) => {
 			const TERM_CHECK_PROPERTY = termProp2checkProp(
 				tempRecord?.term_properties
 			);
-			// Set init for checkProperty state
-			setCheckProperty(TERM_CHECK_PROPERTY);
+			if (defaultChecked) {
+				setCheckProperty(
+					termProp2checkPropChecked(tempRecord?.term_properties)
+				);
+
+				setSelectedCMP(getTermId(tempRecord?.term_properties));
+			} else {
+				// Set init for checkProperty state
+				setCheckProperty(TERM_CHECK_PROPERTY);
+			}
 		}
 	};
 
@@ -173,8 +187,6 @@ const CMP = forwardRef((props, ref) => {
 
 	const callApiConsents = async (userInforId = 0) => {
 		try {
-			const isCmpValid = checkCMPValid();
-			if (!isFormValid || !isCmpValid) return;
 			op.cmp_properties = checkProp2cmpProp(checkProperty);
 			op.mapping_key = cmpKey;
 			op.extend_uid = userInforId.toString();

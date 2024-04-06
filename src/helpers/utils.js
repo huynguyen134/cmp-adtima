@@ -9,13 +9,14 @@ export function setCookie(cname, cvalue, cday) {
 	var d = new Date();
 	d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
 	var expires = 'expires=' + d.toGMTString();
-	document.cookie = cname + '=' + encodeURIComponent(cvalue) + ';' + expires + ';path=/';
+	document.cookie =
+		cname + '=' + encodeURIComponent(cvalue) + ';' + expires + ';path=/';
 }
 
 export function getBrowser() {
 	let userAgent = window.navigator.userAgent;
 
-	const test = regexp => {
+	const test = (regexp) => {
 		return regexp.test(userAgent);
 	};
 
@@ -44,7 +45,9 @@ export function getBrowser() {
 
 export function getOS() {
 	let userAgent = window.navigator.userAgent,
-		platform = window.navigator?.userAgentData?.platform || window.navigator.platform,
+		platform =
+			window.navigator?.userAgentData?.platform ||
+			window.navigator.platform,
 		macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
 		windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
 		iosPlatforms = ['iPhone', 'iPad', 'iPod'],
@@ -65,7 +68,6 @@ export function getOS() {
 	return os;
 }
 
-
 export async function getTerms(op) {
 	const params = {
 		organization_id: op.organization_id,
@@ -82,10 +84,10 @@ export async function getTerms(op) {
 		Object.keys(params)
 			.map((key) => `${key}=${encodeURIComponent(params[key])}`)
 			.join('&');
-	const term = await fetch(baseURI + '/cmp-terms' + qs)
+	const term = await fetch(baseURI + '/cmp-terms' + qs);
 	const dataResponse = await term.json();
-	console.log('dataResponse', dataResponse)
-	return dataResponse.data
+	console.log('dataResponse', dataResponse);
+	return dataResponse.data;
 }
 
 export async function postConsents(op) {
@@ -115,15 +117,13 @@ export async function postConsents(op) {
 			})
 			.then((res) => {
 				return res;
-
 			});
 		return terms;
 	} catch (error) {
-		console.log('error cmp', error)
-		return null
+		console.log('error cmp', error);
+		return null;
 	}
 }
-
 
 export const CMP_FORM_VALIDATES = {
 	isAcceptAll: {
@@ -140,11 +140,33 @@ export function termProp2checkProp(termProp) {
 			property_value: false,
 			property_type: prop.type,
 			property_name: prop.name,
-			error_message: ''
+			error_message: '',
 		};
 	});
 
 	return TERM_CHECK_PROPERTY;
+}
+
+export function termProp2checkPropChecked(termProp) {
+	const TERM_CHECK_PROPERTY = {};
+
+	termProp?.map((prop) => {
+		TERM_CHECK_PROPERTY[prop._id] = {
+			property_id: prop._id,
+			property_value: true,
+			property_type: prop.type,
+			property_name: prop.name,
+			error_message: '',
+		};
+	});
+
+	return TERM_CHECK_PROPERTY;
+}
+
+export function getTermId(termProp) {
+	const TERM_ID_ARRAY = termProp.map((ele) => ele._id);
+
+	return TERM_ID_ARRAY;
 }
 
 export function checkProp2cmpProp(checkProperty) {
@@ -153,10 +175,8 @@ export function checkProp2cmpProp(checkProperty) {
 		const tmp = checkProperty[property];
 		delete tmp['error_message']; // this will remove the error_message field from tmp
 		const copy_tmp = {
-
 			...tmp,
 			property_value: tmp['property_value'] ? 1 : 0,
-
 		};
 		cmpProperties.push(copy_tmp);
 	}
