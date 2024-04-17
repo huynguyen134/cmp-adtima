@@ -1,7 +1,7 @@
 {
 	"name": "cmp-adtima",
 	"private": false,
-	"version": "06.04.24",
+	"version": "17.04.24",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",

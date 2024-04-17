@@ -86,7 +86,6 @@ export async function getTerms(op) {
 			.join('&');
 	const term = await fetch(baseURI + '/cmp-terms' + qs);
 	const dataResponse = await term.json();
-	console.log('dataResponse', dataResponse);
 	return dataResponse.data;
 }
 

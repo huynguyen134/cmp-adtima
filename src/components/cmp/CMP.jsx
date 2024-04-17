@@ -43,10 +43,6 @@ const CMP = forwardRef((props, ref) => {
 	const [cmpKey, setCmpKey] = useState('');
 	const [showErrors, setShowError] = useState('');
 
-	console.log('selectedCMP', selectedCMP);
-	console.log('defaultChecked', defaultChecked);
-	console.log('checkProperty', checkProperty);
-
 	const isAllSelected =
 		termName.length > 0 && selectedCMP.length === termName.length;
 
