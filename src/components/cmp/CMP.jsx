@@ -176,7 +176,7 @@ const CMP = forwardRef((props, ref) => {
 			if (event.target.tagName === 'A') {
 				event.stopPropagation();
 				event.preventDefault();
-				handleLinkClick(val);
+				handleLinkClick(val, event.target.id);
 			}
 		}
 	};
@@ -255,12 +255,15 @@ const CMP = forwardRef((props, ref) => {
 									htmlFor={`checkbox_${valueTerm._id}`}
 									className='cmp-adtima-label-wrap'
 									onClick={(event) =>
-										hadleClickLinkChild(event, valueTerm)
+										hadleClickLinkChild(
+											event,
+											term?.term_properties
+										)
 									}
 									dangerouslySetInnerHTML={{
 										__html: DOMPurify.sanitize(
 											variablesObj?.[valueTerm?.name]
-												.labelText
+												?.labelText
 										),
 									}}
 								></CustomCheckboxLabel>
