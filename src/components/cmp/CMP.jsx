@@ -4,6 +4,7 @@ import React, {
 	useEffect,
 	useImperativeHandle,
 	forwardRef,
+	memo,
 } from 'react';
 import {
 	setCookie,
@@ -35,6 +36,7 @@ const CMP = forwardRef((props, ref) => {
 		getInitTerms,
 		hideCheckAll = false,
 		defaultChecked = false,
+		lang = 'vi',
 	} = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
@@ -262,8 +264,9 @@ const CMP = forwardRef((props, ref) => {
 									}
 									dangerouslySetInnerHTML={{
 										__html: DOMPurify.sanitize(
-											variablesObj?.[valueTerm?.name]
-												?.labelText
+											lang &&
+												variablesObj?.[valueTerm?.name]
+													?.labelText
 										),
 									}}
 								></CustomCheckboxLabel>
@@ -271,10 +274,9 @@ const CMP = forwardRef((props, ref) => {
 							{!checkProperty?.[valueTerm?._id]
 								?.property_value && (
 								<ErrorMessage className='cmp-adtima-error-message'>
-									{
+									{lang &&
 										checkProperty?.[valueTerm?._id]
-											?.error_message
-									}
+											?.error_message}
 								</ErrorMessage>
 							)}
 						</div>
@@ -290,4 +292,4 @@ const CMP = forwardRef((props, ref) => {
 	);
 });
 
-export default CMP;
+export default memo(CMP);
