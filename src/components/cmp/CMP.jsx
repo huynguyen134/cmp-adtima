@@ -31,12 +31,11 @@ const CMP = forwardRef((props, ref) => {
 		op,
 		handleOnChangeCheckbox,
 		classes,
-		variablesObjProps,
+		variablesObj,
 		handleLinkClick,
 		getInitTerms,
 		hideCheckAll = false,
 		defaultChecked = false,
-		lang = 'vi',
 	} = props;
 	const [term, setTerm] = useState(null);
 	const [checkProperty, setCheckProperty] = useState({});
@@ -44,7 +43,7 @@ const CMP = forwardRef((props, ref) => {
 	const [termName, setTermName] = useState([]);
 	const [cmpKey, setCmpKey] = useState('');
 	const [showErrors, setShowError] = useState('');
-	const [variablesObj, setVariablesObjProps] = useState(variablesObjProps);
+	// const [variablesObj, setVariablesObjProps] = useState();
 	const isAllSelected =
 		termName.length > 0 && selectedCMP.length === termName.length;
 
@@ -205,12 +204,20 @@ const CMP = forwardRef((props, ref) => {
 	}));
 
 	useEffect(() => {
-		console.log('lang', lang);
-		console.log('variablesObjProps', variablesObjProps);
-		setVariablesObjProps(variablesObjProps);
-
-		console.log('variablesObjProps1111', variablesObjProps);
-	}, [lang]);
+		Object.values(checkProperty).map((ele) => {
+			setCheckProperty((prev) => {
+				return {
+					...prev,
+					[ele.property_id]: {
+						...prev[ele.property_id],
+						error_message: prev[ele.property_id].property_value
+							? ''
+							: variablesObj?.[ele.property_name].errorMessage,
+					},
+				};
+			});
+		});
+	}, [variablesObj]);
 
 	useEffect(() => {
 		fetchData();
