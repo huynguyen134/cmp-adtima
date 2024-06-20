@@ -31,7 +31,7 @@ const CMP = forwardRef((props, ref) => {
 		op,
 		handleOnChangeCheckbox,
 		classes,
-		variablesObj,
+		variablesObjProps,
 		handleLinkClick,
 		getInitTerms,
 		hideCheckAll = false,
@@ -44,7 +44,7 @@ const CMP = forwardRef((props, ref) => {
 	const [termName, setTermName] = useState([]);
 	const [cmpKey, setCmpKey] = useState('');
 	const [showErrors, setShowError] = useState('');
-
+	const [variablesObj, setVariablesObjProps] = useState(variablesObjProps);
 	const isAllSelected =
 		termName.length > 0 && selectedCMP.length === termName.length;
 
@@ -205,6 +205,14 @@ const CMP = forwardRef((props, ref) => {
 	}));
 
 	useEffect(() => {
+		console.log('lang', lang);
+		console.log('variablesObjProps', variablesObjProps);
+		setVariablesObjProps(variablesObjProps);
+
+		console.log('variablesObjProps1111', variablesObjProps);
+	}, [lang]);
+
+	useEffect(() => {
 		fetchData();
 		return () => {
 			fetchData();
@@ -264,9 +272,8 @@ const CMP = forwardRef((props, ref) => {
 									}
 									dangerouslySetInnerHTML={{
 										__html: DOMPurify.sanitize(
-											lang &&
-												variablesObj?.[valueTerm?.name]
-													?.labelText
+											variablesObj?.[valueTerm?.name]
+												?.labelText
 										),
 									}}
 								></CustomCheckboxLabel>
@@ -274,9 +281,10 @@ const CMP = forwardRef((props, ref) => {
 							{!checkProperty?.[valueTerm?._id]
 								?.property_value && (
 								<ErrorMessage className='cmp-adtima-error-message'>
-									{lang &&
+									{
 										checkProperty?.[valueTerm?._id]
-											?.error_message}
+											?.error_message
+									}
 								</ErrorMessage>
 							)}
 						</div>
